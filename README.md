@@ -13,6 +13,10 @@
 
 ## 看看效果
 
+**1 分半教程视频**：从新建项目、摆模块、写备注，到 AI 生成网页、全屏播放。
+
+https://github.com/user-attachments/assets/5810f8eb-5467-499a-b6ed-eb16cb7a84c4
+
 ![画板界面：8 页演示稿全部生成后的样子](docs/tutorial/shots/16-八页全部生成.jpg)
 
 [`docs/tutorial/`](docs/tutorial) 里是一次完整的实测：用网页画板从零做一套 8 页的产品介绍演示稿，每一步都有截图和数据快照。
