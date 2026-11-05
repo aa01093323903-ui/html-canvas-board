@@ -1,0 +1,25 @@
+{
+ "_readme": "网页画板数据（v2，多页面）。project=项目设置（width 宽度 px、device、background、notes=整体说明）；pages=按顺序排列的页面，每页有 title、notes=本页说明、height、generated=是否已生成网页、modules；modules 按层级从下到上，x/y/w/h 为相对该页左上角的 px，no=画布上显示的编号（全局唯一），inside=被哪个编号的模块完整包含，text=模块上显示的文字，notes.content/function/effect=内容/功能/效果。生成的网页：每页源码在 output/parts/<页面id>.html，拼好的整套在 output/index.html。",
+ "version": 2,
+ "project": {
+  "title": "网页画板 · 产品介绍",
+  "device": "slide",
+  "width": 1280,
+  "height": 720,
+  "background": "#0B0B12",
+  "notes": "给第一次听说「网页画板」的人看的 3 页演示。深色背景，主色用紫蓝渐变（#7C5CFF → #3B82F6），字体用系统字体（苹方 / SF Pro），大标题粗、留白多，像苹果发布会。每页有轻微的入场动画，点击翻页。"
+ },
+ "current": 0,
+ "seq": 0,
+ "updatedAt": "2026-11-05T05:27:17.906Z",
+ "pages": [
+  {
+   "id": "ppk7vpj9",
+   "title": "封面",
+   "notes": "开场页：一句话说清楚这是什么，让人想往下看。",
+   "height": 720,
+   "generated": false,
+   "modules": []
+  }
+ ]
+}

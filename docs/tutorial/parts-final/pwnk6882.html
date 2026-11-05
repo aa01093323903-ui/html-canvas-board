@@ -1,0 +1,51 @@
+<style>
+[data-pid="pwnk6882"]{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif;color:#f5f5f7}
+[data-pid="pwnk6882"] .glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(700px 360px at 50% 100%,rgba(124,92,255,.18),transparent 70%)}
+[data-pid="pwnk6882"] .title{position:absolute;left:140px;top:82px;width:1000px;margin:0;text-align:center;font-size:60px;line-height:1.3;font-weight:800;letter-spacing:-1px}
+[data-pid="pwnk6882"] .sub{position:absolute;left:340px;top:180px;width:600px;margin:0;text-align:center;font-size:22px;color:rgba(235,235,245,.6)}
+[data-pid="pwnk6882"] .card{position:absolute;top:270px;width:300px;height:330px}
+[data-pid="pwnk6882"] .c1{left:140px} [data-pid="pwnk6882"] .c2{left:490px} [data-pid="pwnk6882"] .c3{left:840px}
+[data-pid="pwnk6882"] .in{height:100%;box-sizing:border-box;padding:30px 28px;display:flex;flex-direction:column;border-radius:24px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 50px rgba(0,0,0,.35);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border-color .35s}
+[data-pid="pwnk6882"] .in:hover{transform:translateY(-8px);box-shadow:0 30px 70px rgba(0,0,0,.5),0 0 40px rgba(124,92,255,.18);border-color:rgba(255,255,255,.2)}
+[data-pid="pwnk6882"] .c3 .in{border:1.5px solid transparent;background:linear-gradient(#15141f,#15141f) padding-box,linear-gradient(135deg,#7C5CFF,#3B82F6) border-box}
+[data-pid="pwnk6882"] .num{display:block;margin-bottom:auto;font-size:64px;line-height:1;font-weight:800;letter-spacing:-2px;background:linear-gradient(135deg,#a996ff,#3B82F6);-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-pid="pwnk6882"] .card h3{margin:26px 0 12px;font-size:30px;font-weight:700}
+[data-pid="pwnk6882"] .card p{margin:0;font-size:16px;line-height:1.65;color:rgba(235,235,245,.62)}
+[data-pid="pwnk6882"] .tags{display:flex;gap:8px;margin-top:18px}
+[data-pid="pwnk6882"] .tags span{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:14px;font-size:14px;background:rgba(255,255,255,.07);color:rgba(235,235,245,.8)}
+[data-pid="pwnk6882"] .tags span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--d)}
+[data-pid="pwnk6882"] .arrow{position:absolute;top:423px;width:50px;height:24px;color:rgba(235,235,245,.35)}
+[data-pid="pwnk6882"] .a1{left:440px} [data-pid="pwnk6882"] .a2{left:790px}
+[data-pid="pwnk6882"] .hint{position:absolute;left:340px;top:640px;width:600px;margin:0;text-align:center;font-size:15px;color:rgba(235,235,245,.38)}
+@keyframes pwnk6882-up{from{opacity:0;translate:0 40px}to{opacity:1;translate:0 0}}
+@keyframes pwnk6882-fade{from{opacity:0}to{opacity:1}}
+@keyframes pwnk6882-draw{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+[data-pid="pwnk6882"].active .title{animation:pwnk6882-up .8s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pwnk6882"].active .sub{animation:pwnk6882-fade .8s .15s both}
+[data-pid="pwnk6882"].active .card{animation:pwnk6882-up .8s cubic-bezier(.34,1.4,.5,1) both}
+[data-pid="pwnk6882"].active .c1{animation-delay:.3s} [data-pid="pwnk6882"].active .c2{animation-delay:.42s} [data-pid="pwnk6882"].active .c3{animation-delay:.54s}
+[data-pid="pwnk6882"].active .arrow{animation:pwnk6882-draw .5s .9s ease-out both} [data-pid="pwnk6882"].active .a2{animation-delay:1.05s}
+[data-pid="pwnk6882"].active .hint{animation:pwnk6882-fade .8s 1.2s both}
+</style>
+<div class="glow"></div>
+<h2 class="title">三步，把想法变成网页</h2>
+<p class="sub">不用写代码，也不用会设计，十分钟做完一套。</p>
+<div class="card c1"><div class="in">
+  <span class="num">01</span>
+  <h3>摆模块</h3>
+  <p>像摆家具一样，把导航、标题、图片拖到画布上</p>
+</div></div>
+<div class="card c2"><div class="in">
+  <span class="num">02</span>
+  <h3>写备注</h3>
+  <p>给每个模块写上内容、功能、效果</p>
+  <div class="tags"><span style="--d:#0A84FF">内容</span><span style="--d:#FF9F0A">功能</span><span style="--d:#BF5AF2">效果</span></div>
+</div></div>
+<div class="card c3"><div class="in">
+  <span class="num">03</span>
+  <h3>一键生成</h3>
+  <p>AI 按画板做成网页，还能直接点字修改</p>
+</div></div>
+<svg class="arrow a1" viewBox="0 0 50 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h32M34 6l6 6-6 6"></path></svg>
+<svg class="arrow a2" viewBox="0 0 50 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h32M34 6l6 6-6 6"></path></svg>
+<p class="hint">做完一页，点「+」继续设计下一页</p>

@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>网页画板 · 产品介绍</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#0b0b0c;overflow:hidden;-webkit-font-smoothing:antialiased;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif}
+#stage{position:fixed;inset:0;overflow:hidden}
+#stage:has(.slide.tall.active){overflow-y:auto}
+.slide{position:absolute;left:50%;top:50%;transform-origin:50% 50%;transform:var(--base);overflow:hidden;display:none;box-shadow:0 20px 80px rgba(0,0,0,.45)}
+.slide.tall{transform-origin:50% 0}
+.slide.active{display:block;animation:dk-in .6s cubic-bezier(.32,.72,0,1)}
+.slide.active.back{animation-name:dk-back}
+@keyframes dk-in{from{opacity:0;transform:var(--base) translateX(48px)}}
+@keyframes dk-back{from{opacity:0;transform:var(--base) translateX(-48px)}}
+#hud{position:fixed;left:0;right:0;bottom:0;height:30px;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;opacity:0;transition:opacity .3s;pointer-events:none}
+body:hover #hud{opacity:1}
+#bar{position:absolute;left:0;bottom:0;height:3px;background:rgba(255,255,255,.75);transition:width .5s cubic-bezier(.32,.72,0,1)}
+#pn{color:rgba(255,255,255,.6);font-size:12px;font-variant-numeric:tabular-nums}
+body.embed{background:transparent} body.embed #hud{display:none}
+body.embed .slide{animation:none;box-shadow:0 0 0 .5px rgba(0,0,0,.1),0 10px 40px rgba(0,0,0,.14)}
+.wf-tag{position:absolute;right:12px;top:10px;font-size:12px;color:#8e8e93;background:rgba(120,120,128,.12);padding:3px 8px;border-radius:6px;z-index:99}
+.wf-m{position:absolute;border-radius:8px;background:rgba(120,120,128,.1);box-shadow:inset 0 0 0 1px rgba(120,120,128,.3);padding:8px 10px;overflow:hidden;color:#6e6e73;font-size:13px;display:flex;flex-direction:column;gap:4px}
+.wf-m b{font-weight:600;color:#3a3a3c;white-space:pre-wrap} .wf-m small{font-size:11px;line-height:1.4}
+.wf-heading b{font-size:min(28px,60%)} .wf-heading,.wf-text{background:transparent}
+.wf-button{background:#007AFF;align-items:center;justify-content:center} .wf-button b{color:#fff}
+.wf-section{background:transparent;box-shadow:inset 0 0 0 1.5px rgba(120,120,128,.35)}
+</style>
+</head>
+<body>
+<div id="stage">
+<section class="slide" data-pid="ppk7vpj9" data-i="0" style="width:1280px;height:720px;background:#0B0B12">
+<style>
+[data-pid="ppk7vpj9"]{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif;color:#f5f5f7}
+[data-pid="ppk7vpj9"] .glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(560px 420px at 76% 50%,rgba(124,92,255,.26),transparent 70%),radial-gradient(460px 340px at 8% 12%,rgba(59,130,246,.14),transparent 70%)}
+[data-pid="ppk7vpj9"] .title{position:absolute;left:116px;top:186px;margin:0;font-size:112px;line-height:1.12;font-weight:800;letter-spacing:-3px;background:linear-gradient(100deg,#fff 8%,#c7b8ff 42%,#7C5CFF 72%,#3B82F6);-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-pid="ppk7vpj9"] .sub{position:absolute;left:120px;top:334px;width:640px;margin:0;font-size:26px;line-height:1.5;font-weight:400;color:rgba(235,235,245,.72)}
+[data-pid="ppk7vpj9"] .cta{position:absolute;left:120px;top:446px;height:54px;padding:0 30px;border:0;border-radius:27px;font-family:inherit;font-size:18px;font-weight:600;color:#fff;cursor:pointer;background:linear-gradient(100deg,#7C5CFF,#3B82F6);box-shadow:0 8px 30px rgba(124,92,255,.35);transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+[data-pid="ppk7vpj9"] .cta:hover{transform:translateY(-3px);box-shadow:0 14px 44px rgba(124,92,255,.6)}
+[data-pid="ppk7vpj9"] .foot{position:absolute;left:120px;top:616px;margin:0;font-size:15px;letter-spacing:.5px;color:rgba(235,235,245,.4)}
+[data-pid="ppk7vpj9"] .mock{position:absolute;left:760px;top:140px;width:420px;height:440px;border-radius:28px;overflow:hidden;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);box-shadow:0 30px 80px rgba(0,0,0,.5),0 0 120px rgba(124,92,255,.2)}
+[data-pid="ppk7vpj9"] .mock::before{content:"";position:absolute;inset:38px 0 0;background-image:radial-gradient(rgba(255,255,255,.12) 1px,transparent 1px);background-size:18px 18px}
+[data-pid="ppk7vpj9"] .bar{position:absolute;left:0;right:0;top:0;height:38px;display:flex;gap:7px;align-items:center;padding-left:16px;border-bottom:1px solid rgba(255,255,255,.08)}
+[data-pid="ppk7vpj9"] .bar i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.18)}
+[data-pid="ppk7vpj9"] .blk{position:absolute;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);animation:ppk7vpj9-float 6s ease-in-out infinite}
+[data-pid="ppk7vpj9"] .blk b{position:absolute;left:-9px;top:-9px;width:22px;height:22px;border-radius:50%;font-size:12px;font-weight:700;line-height:22px;text-align:center;color:#fff;background:linear-gradient(135deg,#7C5CFF,#3B82F6);box-shadow:0 2px 8px rgba(124,92,255,.5)}
+[data-pid="ppk7vpj9"] .blk s{display:block;height:8px;margin:0 16px 10px;border-radius:4px;background:rgba(255,255,255,.16)}
+[data-pid="ppk7vpj9"] .b1{left:36px;top:76px;width:348px;height:58px;padding-top:25px;box-sizing:border-box}
+[data-pid="ppk7vpj9"] .b2{left:36px;top:156px;width:206px;height:150px;animation-delay:-1.5s;display:grid;place-items:center}
+[data-pid="ppk7vpj9"] .b2 svg{width:44px;height:44px;color:rgba(255,255,255,.3)}
+[data-pid="ppk7vpj9"] .b3{left:262px;top:156px;width:122px;height:150px;padding-top:24px;box-sizing:border-box;animation-delay:-3s}
+[data-pid="ppk7vpj9"] .b4{left:36px;top:330px;width:140px;height:46px;border:0;background:linear-gradient(100deg,rgba(124,92,255,.75),rgba(59,130,246,.75));animation-delay:-4.5s}
+[data-pid="ppk7vpj9"] .cursor{position:absolute;left:150px;top:350px;width:22px;height:22px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));animation:ppk7vpj9-cursor 6s ease-in-out infinite}
+@keyframes ppk7vpj9-float{0%,100%{translate:0 0}50%{translate:0 -8px}}
+@keyframes ppk7vpj9-cursor{0%,100%{translate:0 0}40%{translate:150px -120px}60%{translate:150px -120px}}
+@keyframes ppk7vpj9-up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes ppk7vpj9-in{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+[data-pid="ppk7vpj9"].active .title{animation:ppk7vpj9-up .9s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="ppk7vpj9"].active .sub{animation:ppk7vpj9-up .9s .15s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="ppk7vpj9"].active .cta{animation:ppk7vpj9-up .9s .3s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="ppk7vpj9"].active .mock{animation:ppk7vpj9-in 1.1s .2s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="ppk7vpj9"].active .foot{animation:ppk7vpj9-up .9s .6s cubic-bezier(.2,.8,.2,1) both}
+</style>
+<div class="glow"></div>
+<h1 class="title">网页画板</h1>
+<p class="sub">画个草图，写几句备注，AI 帮你做成能翻页的网页。</p>
+<button class="cta">往下看 →</button>
+<div class="mock" aria-hidden="true">
+  <div class="bar"><i></i><i></i><i></i></div>
+  <div class="blk b1"><b>1</b><s style="width:55%"></s></div>
+  <div class="blk b2"><b>2</b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg></div>
+  <div class="blk b3"><b>3</b><s></s><s style="width:60%"></s><s style="width:75%"></s><s style="width:45%"></s></div>
+  <div class="blk b4"><b>4</b></div>
+  <svg class="cursor" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-3 6z" fill="#fff" stroke="#111" stroke-width="1.2" stroke-linejoin="round"/></svg>
+</div>
+<p class="foot">开源 · 本地运行 · 支持 DeepSeek 等模型</p>
+<script>
+(function(){
+  const root=document.currentScript.closest('[data-pid]');
+  root.querySelector('.cta').addEventListener('click',()=>dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight'})));
+})();
+</script>
+
+</section>
+<section class="slide" data-pid="pwnk6882" data-i="1" style="width:1280px;height:720px;background:#0B0B12">
+<style>
+[data-pid="pwnk6882"]{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif;color:#f5f5f7}
+[data-pid="pwnk6882"] .glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(700px 360px at 50% 100%,rgba(124,92,255,.18),transparent 70%)}
+[data-pid="pwnk6882"] .title{position:absolute;left:140px;top:82px;width:1000px;margin:0;text-align:center;font-size:60px;line-height:1.3;font-weight:800;letter-spacing:-1px}
+[data-pid="pwnk6882"] .sub{position:absolute;left:340px;top:180px;width:600px;margin:0;text-align:center;font-size:22px;color:rgba(235,235,245,.6)}
+[data-pid="pwnk6882"] .card{position:absolute;top:270px;width:300px;height:330px}
+[data-pid="pwnk6882"] .c1{left:140px} [data-pid="pwnk6882"] .c2{left:490px} [data-pid="pwnk6882"] .c3{left:840px}
+[data-pid="pwnk6882"] .in{height:100%;box-sizing:border-box;padding:30px 28px;display:flex;flex-direction:column;border-radius:24px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 50px rgba(0,0,0,.35);transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border-color .35s}
+[data-pid="pwnk6882"] .in:hover{transform:translateY(-8px);box-shadow:0 30px 70px rgba(0,0,0,.5),0 0 40px rgba(124,92,255,.18);border-color:rgba(255,255,255,.2)}
+[data-pid="pwnk6882"] .c3 .in{border:1.5px solid transparent;background:linear-gradient(#15141f,#15141f) padding-box,linear-gradient(135deg,#7C5CFF,#3B82F6) border-box}
+[data-pid="pwnk6882"] .num{display:block;margin-bottom:auto;font-size:64px;line-height:1;font-weight:800;letter-spacing:-2px;background:linear-gradient(135deg,#a996ff,#3B82F6);-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-pid="pwnk6882"] .card h3{margin:26px 0 12px;font-size:30px;font-weight:700}
+[data-pid="pwnk6882"] .card p{margin:0;font-size:16px;line-height:1.65;color:rgba(235,235,245,.62)}
+[data-pid="pwnk6882"] .tags{display:flex;gap:8px;margin-top:18px}
+[data-pid="pwnk6882"] .tags span{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:14px;font-size:14px;background:rgba(255,255,255,.07);color:rgba(235,235,245,.8)}
+[data-pid="pwnk6882"] .tags span::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--d)}
+[data-pid="pwnk6882"] .arrow{position:absolute;top:423px;width:50px;height:24px;color:rgba(235,235,245,.35)}
+[data-pid="pwnk6882"] .a1{left:440px} [data-pid="pwnk6882"] .a2{left:790px}
+[data-pid="pwnk6882"] .hint{position:absolute;left:340px;top:640px;width:600px;margin:0;text-align:center;font-size:15px;color:rgba(235,235,245,.38)}
+@keyframes pwnk6882-up{from{opacity:0;translate:0 40px}to{opacity:1;translate:0 0}}
+@keyframes pwnk6882-fade{from{opacity:0}to{opacity:1}}
+@keyframes pwnk6882-draw{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+[data-pid="pwnk6882"].active .title{animation:pwnk6882-up .8s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pwnk6882"].active .sub{animation:pwnk6882-fade .8s .15s both}
+[data-pid="pwnk6882"].active .card{animation:pwnk6882-up .8s cubic-bezier(.34,1.4,.5,1) both}
+[data-pid="pwnk6882"].active .c1{animation-delay:.3s} [data-pid="pwnk6882"].active .c2{animation-delay:.42s} [data-pid="pwnk6882"].active .c3{animation-delay:.54s}
+[data-pid="pwnk6882"].active .arrow{animation:pwnk6882-draw .5s .9s ease-out both} [data-pid="pwnk6882"].active .a2{animation-delay:1.05s}
+[data-pid="pwnk6882"].active .hint{animation:pwnk6882-fade .8s 1.2s both}
+</style>
+<div class="glow"></div>
+<h2 class="title">三步，把想法变成网页</h2>
+<p class="sub">不用写代码，也不用会设计，十分钟做完一套。</p>
+<div class="card c1"><div class="in">
+  <span class="num">01</span>
+  <h3>摆模块</h3>
+  <p>像摆家具一样，把导航、标题、图片拖到画布上</p>
+</div></div>
+<div class="card c2"><div class="in">
+  <span class="num">02</span>
+  <h3>写备注</h3>
+  <p>给每个模块写上内容、功能、效果</p>
+  <div class="tags"><span style="--d:#0A84FF">内容</span><span style="--d:#FF9F0A">功能</span><span style="--d:#BF5AF2">效果</span></div>
+</div></div>
+<div class="card c3"><div class="in">
+  <span class="num">03</span>
+  <h3>一键生成</h3>
+  <p>AI 按画板做成网页，还能直接点字修改</p>
+</div></div>
+<svg class="arrow a1" viewBox="0 0 50 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h32M34 6l6 6-6 6"></path></svg>
+<svg class="arrow a2" viewBox="0 0 50 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h32M34 6l6 6-6 6"></path></svg>
+<p class="hint">做完一页，点「+」继续设计下一页</p>
+
+</section>
+<section class="slide" data-pid="ps5k0y9q" data-i="2" style="width:1280px;height:720px;background:#0B0B12">
+<style>
+[data-pid="ps5k0y9q"]{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif;color:#f5f5f7}
+[data-pid="ps5k0y9q"] .glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(520px 380px at 30% 70%,rgba(124,92,255,.16),transparent 70%),radial-gradient(420px 320px at 90% 20%,rgba(59,130,246,.12),transparent 70%)}
+[data-pid="ps5k0y9q"] .title{position:absolute;left:80px;top:66px;margin:0;font-size:60px;line-height:1.3;font-weight:800;letter-spacing:-1px}
+[data-pid="ps5k0y9q"] .sub{position:absolute;left:80px;top:160px;margin:0;font-size:22px;color:rgba(235,235,245,.62)}
+[data-pid="ps5k0y9q"] .demo{position:absolute;left:80px;top:250px;width:640px;height:400px;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.1);box-shadow:0 24px 60px rgba(0,0,0,.45)}
+[data-pid="ps5k0y9q"] .lib{position:absolute;left:0;top:0;bottom:0;width:64px;border-right:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:22px;box-sizing:border-box}
+[data-pid="ps5k0y9q"] .lib i{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.1)}
+[data-pid="ps5k0y9q"] .lib i.hot{background:rgba(10,132,255,.45)}
+[data-pid="ps5k0y9q"] .cv{position:absolute;left:64px;top:0;right:0;bottom:0;background-image:radial-gradient(rgba(255,255,255,.1) 1px,transparent 1px);background-size:20px 20px}
+[data-pid="ps5k0y9q"] .blk{position:absolute;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13)}
+[data-pid="ps5k0y9q"] .blk s{display:block;height:8px;margin:14px 14px 0;border-radius:4px;background:rgba(255,255,255,.16)}
+[data-pid="ps5k0y9q"] .s1{left:110px;top:44px;width:330px;height:46px} [data-pid="ps5k0y9q"] .s2{left:330px;top:250px;width:200px;height:110px}
+[data-pid="ps5k0y9q"] .fly{position:absolute;border-radius:10px;background:rgba(10,132,255,.16);border:1px solid rgba(10,132,255,.5);animation:ps5k0y9q-fly 7s cubic-bezier(.3,.7,.2,1) infinite}
+[data-pid="ps5k0y9q"] .fly s{display:block;height:8px;margin:14px 14px 0;border-radius:4px;background:rgba(255,255,255,.22)}
+[data-pid="ps5k0y9q"] .fly b{position:absolute;width:9px;height:9px;border-radius:50%;background:#fff;border:1.5px solid #0A84FF;opacity:0;animation:ps5k0y9q-h 7s infinite}
+[data-pid="ps5k0y9q"] .fly b:nth-of-type(1){left:-6px;top:-6px} [data-pid="ps5k0y9q"] .fly b:nth-of-type(2){right:-6px;top:-6px} [data-pid="ps5k0y9q"] .fly b:nth-of-type(3){left:-6px;bottom:-6px} [data-pid="ps5k0y9q"] .fly b:nth-of-type(4){right:-6px;bottom:-6px}
+[data-pid="ps5k0y9q"] .fly em{position:absolute;left:50%;bottom:-30px;translate:-50% 0;padding:3px 8px;border-radius:6px;font-style:normal;font-size:11px;white-space:nowrap;color:#fff;background:#0A84FF;opacity:0;animation:ps5k0y9q-h 7s infinite}
+[data-pid="ps5k0y9q"] .guide{position:absolute;left:174px;top:0;bottom:0;width:1px;background:#ff375f;opacity:0;animation:ps5k0y9q-g 7s infinite}
+@keyframes ps5k0y9q-fly{
+ 0%{left:18px;top:108px;width:28px;height:28px;opacity:0}
+ 4%{opacity:1}
+ 22%{left:200px;top:130px;width:170px;height:96px}
+ 50%{left:200px;top:130px;width:170px;height:96px}
+ 60%{left:174px;top:130px;width:170px;height:96px}
+ 75%,90%{left:174px;top:130px;width:200px;height:96px;opacity:1}
+ 100%{left:174px;top:130px;width:200px;height:96px;opacity:0}}
+@keyframes ps5k0y9q-h{0%,26%{opacity:0}30%,90%{opacity:1}100%{opacity:0}}
+@keyframes ps5k0y9q-g{0%,55%{opacity:0}58%,72%{opacity:1}78%,100%{opacity:0}}
+[data-pid="ps5k0y9q"] .grid{position:absolute;left:780px;top:250px;width:420px;height:400px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:14px}
+[data-pid="ps5k0y9q"] .cell{box-sizing:border-box;padding:18px;border-radius:18px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);transition:background .3s,border-color .3s}
+[data-pid="ps5k0y9q"] .cell:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+[data-pid="ps5k0y9q"] .cell svg{width:26px;height:26px;color:#a996ff}
+[data-pid="ps5k0y9q"] .cell h4{margin:10px 0 4px;font-size:17px;font-weight:600}
+[data-pid="ps5k0y9q"] .cell p{margin:0;text-wrap:balance;font-size:13px;line-height:1.5;color:rgba(235,235,245,.55)}
+@keyframes ps5k0y9q-up{from{opacity:0;translate:0 24px}to{opacity:1;translate:0 0}}
+[data-pid="ps5k0y9q"].active .title{animation:ps5k0y9q-up .8s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="ps5k0y9q"].active .sub{animation:ps5k0y9q-up .8s .1s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="ps5k0y9q"].active .demo{animation:ps5k0y9q-up .9s .2s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="ps5k0y9q"].active .cell{animation:ps5k0y9q-up .6s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="ps5k0y9q"].active .cell:nth-child(1){animation-delay:.4s} [data-pid="ps5k0y9q"].active .cell:nth-child(2){animation-delay:.48s} [data-pid="ps5k0y9q"].active .cell:nth-child(3){animation-delay:.56s} [data-pid="ps5k0y9q"].active .cell:nth-child(4){animation-delay:.64s} [data-pid="ps5k0y9q"].active .cell:nth-child(5){animation-delay:.72s} [data-pid="ps5k0y9q"].active .cell:nth-child(6){animation-delay:.8s}
+</style>
+<div class="glow"></div>
+<h2 class="title">像摆家具一样排版</h2>
+<p class="sub">23 种预设模块，拖进来、拉大小、对齐，全程跟手不卡顿。</p>
+<div class="demo" aria-hidden="true">
+  <div class="lib"><i></i><i></i><i class="hot"></i><i></i><i></i><i></i><i></i></div>
+  <div class="cv">
+    <div class="blk s1"><s style="width:50%"></s></div>
+    <div class="blk s2"><s></s><s style="width:60%"></s></div>
+  </div>
+  <i class="guide"></i>
+  <div class="fly"><s style="width:70%"></s><s style="width:45%"></s><b></b><b></b><b></b><b></b><em>卡片 · 200 × 96</em></div>
+</div>
+<div class="grid">
+  <div class="cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 4v16M20 4v16M8 12h8"/></svg><h4>智能吸附对齐</h4><p>靠近就吸上，出现参考线</p></div>
+  <div class="cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="3" y="3" width="11" height="11" rx="2"/><rect x="10" y="10" width="11" height="11" rx="2"/></svg><h4>多选与分布</h4><p>框选多个，一键对齐等距</p></div>
+  <div class="cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><h4>无限撤销重做</h4><p>⌘Z / ⇧⌘Z，随便试不怕错</p></div>
+  <div class="cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg><h4>图层与层级</h4><p>上下移动、置顶置底</p></div>
+  <div class="cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4M8 11h6M11 8v6"/></svg><h4>双指缩放平移</h4><p>触控板手势，⌘0 适合窗口</p></div>
+  <div class="cell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="2" y="5" width="14" height="10" rx="1.5"/><rect x="17" y="8" width="5" height="11" rx="1.2"/><path d="M6 19h6"/></svg><h4>4 种画布尺寸</h4><p>演示、手机、平板、桌面</p></div>
+</div>
+
+</section>
+<section class="slide" data-pid="pw80sw1j" data-i="3" style="width:1280px;height:720px;background:#0B0B12">
+<style>
+[data-pid="pw80sw1j"]{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif;color:#f5f5f7}
+[data-pid="pw80sw1j"] .glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(600px 300px at 50% 28%,rgba(124,92,255,.2),transparent 70%)}
+[data-pid="pw80sw1j"] .title{position:absolute;left:140px;top:60px;width:1000px;margin:0;text-align:center;font-size:58px;line-height:1.3;font-weight:800;letter-spacing:-1px}
+[data-pid="pw80sw1j"] kbd{display:inline-block;padding:0 14px;margin:0 6px;border-radius:14px;font-family:inherit;font-size:.82em;line-height:1.3;background:linear-gradient(#2a2a36,#1b1b24);border:1px solid rgba(255,255,255,.18);box-shadow:0 4px 0 rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12)}
+[data-pid="pw80sw1j"] .pal{position:absolute;left:340px;top:170px;width:600px;height:60px;box-sizing:border-box;display:flex;align-items:center;gap:14px;padding:0 22px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);box-shadow:0 20px 50px rgba(0,0,0,.45),0 0 60px rgba(124,92,255,.15);backdrop-filter:blur(20px)}
+[data-pid="pw80sw1j"] .pal svg{width:22px;height:22px;flex:none;color:#b9a8ff}
+[data-pid="pw80sw1j"] .pal span{font-size:19px;white-space:nowrap}
+[data-pid="pw80sw1j"] .pal i{width:2px;height:24px;background:#b9a8ff;animation:pw80sw1j-blink 1s steps(1) infinite}
+[data-pid="pw80sw1j"] .card{position:absolute;top:280px;width:260px;height:280px}
+[data-pid="pw80sw1j"] .c1{left:80px} [data-pid="pw80sw1j"] .c2{left:366px} [data-pid="pw80sw1j"] .c3{left:653px} [data-pid="pw80sw1j"] .c4{left:940px}
+[data-pid="pw80sw1j"] .in{height:100%;box-sizing:border-box;padding:28px 24px;display:flex;flex-direction:column;border-radius:22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s}
+[data-pid="pw80sw1j"] .in:hover{transform:translateY(-8px);border-color:rgba(255,255,255,.22)}
+[data-pid="pw80sw1j"] .c4 .in{border:1.5px solid transparent;background:linear-gradient(#15141f,#15141f) padding-box,linear-gradient(135deg,#7C5CFF,#3B82F6) border-box}
+[data-pid="pw80sw1j"] .ico{flex:none;margin-bottom:auto;width:50px;height:50px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(124,92,255,.9),rgba(59,130,246,.9));box-shadow:0 8px 20px rgba(124,92,255,.35)}
+[data-pid="pw80sw1j"] .ico svg{width:26px;height:26px;color:#fff}
+[data-pid="pw80sw1j"] .card h3{margin:26px 0 10px;font-size:24px;font-weight:700}
+[data-pid="pw80sw1j"] .card p{margin:0;font-size:15px;line-height:1.65;text-wrap:balance;color:rgba(235,235,245,.6)}
+[data-pid="pw80sw1j"] .models{position:absolute;left:140px;top:612px;width:1000px;margin:0;text-align:center;font-size:16px;color:rgba(235,235,245,.42)}
+[data-pid="pw80sw1j"] .models b{font-weight:500;color:rgba(235,235,245,.8)}
+@keyframes pw80sw1j-blink{50%{opacity:0}}
+@keyframes pw80sw1j-up{from{opacity:0;translate:0 30px}to{opacity:1;translate:0 0}}
+@keyframes pw80sw1j-type{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes pw80sw1j-fade{from{opacity:0}to{opacity:1}}
+[data-pid="pw80sw1j"].active .title{animation:pw80sw1j-up .8s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pw80sw1j"].active .pal{animation:pw80sw1j-up .8s .15s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pw80sw1j"].active .pal span{animation:pw80sw1j-type 1.4s .7s steps(15) both}
+[data-pid="pw80sw1j"].active .card{animation:pw80sw1j-up .8s cubic-bezier(.34,1.4,.5,1) both}
+[data-pid="pw80sw1j"].active .c1{animation-delay:.5s} [data-pid="pw80sw1j"].active .c2{animation-delay:.6s} [data-pid="pw80sw1j"].active .c3{animation-delay:.7s} [data-pid="pw80sw1j"].active .c4{animation-delay:.8s}
+[data-pid="pw80sw1j"].active .models{animation:pw80sw1j-fade .8s 1.2s both}
+</style>
+<div class="glow"></div>
+<h2 class="title">按 <kbd>⌘K</kbd>，让 AI 帮你干活</h2>
+<div class="pal"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6zM19 15l.9 2.4 2.1.6-2.1.7L19 21l-.9-2.3-2.1-.7 2.1-.6z"/></svg><span>让 AI 排一页产品发布会的封面</span><i></i></div>
+<div class="card c1"><div class="in">
+  <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="6" rx="1.5"/><rect x="3" y="12" width="8" height="9" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/></svg></div>
+  <h3>自动排版</h3><p>一句话描述，AI 帮你摆好整页线框</p>
+</div></div>
+<div class="card c2"><div class="in">
+  <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></div>
+  <h3>整套大纲</h3><p>给个主题，一次规划好每一页</p>
+</div></div>
+<div class="card c3"><div class="in">
+  <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13 7 4 4"/></svg></div>
+  <h3>补写备注</h3><p>选中模块，AI 帮你把内容、功能、效果写具体</p>
+</div></div>
+<div class="card c4"><div class="in">
+  <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-5 4 5 4M16 8l5 4-5 4M14 4l-4 16"/></svg></div>
+  <h3>生成网页</h3><p>按线框和备注写出整页网页，边写边显示进度</p>
+</div></div>
+<p class="models">支持 <b>DeepSeek</b>、<b>Kimi</b>、<b>通义千问</b>、<b>OpenAI</b>、<b>本地 Ollama</b> —— 任何 OpenAI 兼容接口</p>
+
+</section>
+<section class="slide" data-pid="p7g7tfqd" data-i="4" style="width:1280px;height:720px;background:#0B0B12">
+<style>
+[data-pid="p7g7tfqd"]{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif;color:#f5f5f7}
+[data-pid="p7g7tfqd"] .glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(560px 420px at 75% 50%,rgba(124,92,255,.18),transparent 70%)}
+[data-pid="p7g7tfqd"] .title{position:absolute;left:80px;top:78px;margin:0;font-size:52px;line-height:1.3;font-weight:800;letter-spacing:-1px}
+[data-pid="p7g7tfqd"] .sub{position:absolute;left:80px;top:168px;width:500px;margin:0;font-size:20px;line-height:1.6;color:rgba(235,235,245,.62)}
+[data-pid="p7g7tfqd"] .way{position:absolute;left:80px;width:500px;height:96px;box-sizing:border-box;display:flex;align-items:center;gap:18px;padding:0 22px;border-radius:18px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09)}
+[data-pid="p7g7tfqd"] .w1{top:270px} [data-pid="p7g7tfqd"] .w2{top:384px} [data-pid="p7g7tfqd"] .w3{top:498px}
+[data-pid="p7g7tfqd"] .way .ic{width:48px;height:48px;flex:none;border-radius:50%;display:grid;place-items:center;background:rgba(124,92,255,.18);color:#b9a8ff}
+[data-pid="p7g7tfqd"] .way .ic svg{width:22px;height:22px}
+[data-pid="p7g7tfqd"] .way h4{margin:0 0 5px;font-size:20px;font-weight:600}
+[data-pid="p7g7tfqd"] .way p{margin:0;font-size:15px;color:rgba(235,235,245,.55)}
+[data-pid="p7g7tfqd"] .win{position:absolute;left:640px;top:90px;width:560px;height:540px;border-radius:18px;overflow:hidden;background:#f5f5f7;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.12)}
+[data-pid="p7g7tfqd"] .chrome{height:40px;display:flex;align-items:center;gap:7px;padding:0 14px;background:#e8e8ed;border-bottom:1px solid #d2d2d7}
+[data-pid="p7g7tfqd"] .chrome i{width:11px;height:11px;border-radius:50%}
+[data-pid="p7g7tfqd"] .url{margin-left:14px;flex:1;height:24px;border-radius:7px;background:#fff;font-size:12px;line-height:24px;padding-left:10px;color:#86868b}
+[data-pid="p7g7tfqd"] .page{position:relative;height:500px;padding:90px 44px 0;box-sizing:border-box;color:#1d1d1f;background:linear-gradient(160deg,#fff,#eef0ff)}
+[data-pid="p7g7tfqd"] .eyebrow{margin:0;font-size:14px;font-weight:600;color:#7C5CFF;letter-spacing:1px}
+[data-pid="p7g7tfqd"] .h{position:relative;height:56px;margin:12px 0 0;font-size:44px;line-height:1.2;font-weight:800;letter-spacing:-1px}
+[data-pid="p7g7tfqd"] .h span{position:absolute;left:0;top:0;width:100%}
+[data-pid="p7g7tfqd"] .h .old{animation:p7g7tfqd-old 9s infinite} [data-pid="p7g7tfqd"] .h .new{opacity:0;animation:p7g7tfqd-new 9s infinite}
+[data-pid="p7g7tfqd"] .h::after{content:"";position:absolute;inset:-8px -10px;border:1.5px dashed #0A84FF;border-radius:8px;opacity:0;animation:p7g7tfqd-sel 9s infinite}
+[data-pid="p7g7tfqd"] .para{margin:10px 0 0;font-size:16px;line-height:1.7;color:#6e6e73}
+[data-pid="p7g7tfqd"] .btn{display:inline-block;margin-top:28px;padding:12px 26px;border-radius:24px;font-size:16px;font-weight:600;color:#fff;background:#1d1d1f;animation:p7g7tfqd-btn 9s infinite}
+[data-pid="p7g7tfqd"] .bar{position:absolute;left:44px;top:388px;width:390px;height:46px;box-sizing:border-box;display:flex;align-items:center;gap:10px;padding:0 8px 0 14px;border-radius:14px;background:rgba(255,255,255,.75);backdrop-filter:blur(16px);box-shadow:0 10px 30px rgba(0,0,0,.15),0 0 0 1px rgba(0,0,0,.06);opacity:0;animation:p7g7tfqd-bar 9s infinite}
+[data-pid="p7g7tfqd"] .bar svg{width:16px;height:16px;color:#7C5CFF;flex:none}
+[data-pid="p7g7tfqd"] .bar span{flex:1;font-size:14px;color:#1d1d1f;white-space:nowrap;animation:p7g7tfqd-type 9s steps(10) infinite}
+[data-pid="p7g7tfqd"] .bar b{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#7C5CFF,#3B82F6)}
+@keyframes p7g7tfqd-sel{0%,8%{opacity:0}12%,38%{opacity:1}42%,100%{opacity:0}}
+@keyframes p7g7tfqd-old{0%,20%{opacity:1}26%,100%{opacity:0}}
+@keyframes p7g7tfqd-new{0%,22%{opacity:0}28%,94%{opacity:1}100%{opacity:0}}
+@keyframes p7g7tfqd-bar{0%,45%{opacity:0;translate:0 10px}50%,80%{opacity:1;translate:0 0}86%,100%{opacity:0;translate:0 0}}
+@keyframes p7g7tfqd-type{0%,50%{clip-path:inset(0 100% 0 0)}66%,100%{clip-path:inset(0 0 0 0)}}
+@keyframes p7g7tfqd-btn{0%,70%{background:#1d1d1f;transform:none}76%,94%{background:#30d158;transform:scale(1.08)}100%{background:#1d1d1f;transform:none}}
+@keyframes p7g7tfqd-left{from{opacity:0;translate:-40px 0}to{opacity:1;translate:0 0}}
+@keyframes p7g7tfqd-up{from{opacity:0;translate:0 24px}to{opacity:1;translate:0 0}}
+[data-pid="p7g7tfqd"].active .title{animation:p7g7tfqd-up .8s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="p7g7tfqd"].active .sub{animation:p7g7tfqd-up .8s .1s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="p7g7tfqd"].active .way{animation:p7g7tfqd-left .7s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="p7g7tfqd"].active .w1{animation-delay:.3s} [data-pid="p7g7tfqd"].active .w2{animation-delay:.42s} [data-pid="p7g7tfqd"].active .w3{animation-delay:.54s}
+[data-pid="p7g7tfqd"].active .win{animation:p7g7tfqd-up .9s .25s cubic-bezier(.2,.8,.2,1) both}
+</style>
+<div class="glow"></div>
+<h2 class="title">生成之后，还能直接改</h2>
+<p class="sub">不满意的地方，点一下就能改，改完自动存回源码。</p>
+<div class="way w1"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 4h6M9 20h6M12 4v16"/></svg></span><div><h4>点字改字</h4><p>直接在网页上打字，像改文档一样</p></div></div>
+<div class="way w2"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 20 11-11M14 4l1 2 2 1-2 1-1 2-1-2-2-1 2-1zM19 11l.6 1.4L21 13l-1.4.6L19 15l-.6-1.4L17 13l1.4-.6z"/></svg></span><div><h4>选中元素问 AI</h4><p>比如「这个按钮换成绿色，再大一点」</p></div></div>
+<div class="way w3"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg></span><div><h4>整页重写，一键撤销</h4><p>一句话改整页风格，不满意就退回上一版</p></div></div>
+<div class="win" aria-hidden="true">
+  <div class="chrome"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><div class="url">localhost:5178 · 预览</div></div>
+  <div class="page">
+    <p class="eyebrow">NEW ARRIVAL</p>
+    <div class="h"><span class="old">春季新品发布</span><span class="new">夏日新品，现在开售</span></div>
+    <p class="para">轻一点，快一点，好看一点。<br>点这里的任何文字，都可以直接改。</p>
+    <span class="btn">立即预约</span>
+    <div class="bar"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6z"/></svg><span>按钮换成绿色，再大一点</span><b></b></div>
+  </div>
+</div>
+
+</section>
+<section class="slide" data-pid="pmtg9996" data-i="5" style="width:1280px;height:720px;background:#0B0B12">
+<style>
+[data-pid="pmtg9996"]{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif;color:#f5f5f7}
+[data-pid="pmtg9996"] .glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(700px 360px at 55% 85%,rgba(59,130,246,.16),transparent 70%)}
+[data-pid="pmtg9996"] .title{position:absolute;left:80px;top:62px;margin:0;font-size:56px;line-height:1.3;font-weight:800;letter-spacing:-1px}
+[data-pid="pmtg9996"] .grad{background:linear-gradient(100deg,#c7b8ff,#7C5CFF 50%,#3B82F6);-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-pid="pmtg9996"] .sub{position:absolute;left:80px;top:150px;width:760px;margin:0;font-size:20px;line-height:1.6;color:rgba(235,235,245,.62)}
+[data-pid="pmtg9996"] .dev{position:absolute;box-sizing:border-box;background:#16161f;border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 60px rgba(0,0,0,.5);overflow:hidden}
+[data-pid="pmtg9996"] .lap{left:80px;top:250px;width:600px;height:380px;border-radius:16px}
+[data-pid="pmtg9996"] .tab{left:720px;top:270px;width:260px;height:360px;border-radius:24px;padding:14px}
+[data-pid="pmtg9996"] .pho{left:1010px;top:300px;width:190px;height:330px;border-radius:30px;padding:30px 12px 12px}
+[data-pid="pmtg9996"] .pho::before{content:"";position:absolute;left:50%;top:10px;width:56px;height:14px;translate:-50% 0;border-radius:8px;background:#000}
+[data-pid="pmtg9996"] .chrome{height:30px;display:flex;align-items:center;gap:6px;padding:0 12px;border-bottom:1px solid rgba(255,255,255,.08)}
+[data-pid="pmtg9996"] .chrome i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.2)}
+[data-pid="pmtg9996"] .scr{padding:14px;display:grid;gap:10px}
+[data-pid="pmtg9996"] .k{border-radius:8px;background:rgba(255,255,255,.09);animation:pmtg9996-shim 3s ease-in-out infinite}
+[data-pid="pmtg9996"] .k.acc{background:linear-gradient(120deg,rgba(124,92,255,.5),rgba(59,130,246,.5))}
+[data-pid="pmtg9996"] .lap .scr{grid-template-columns:repeat(3,1fr)}
+[data-pid="pmtg9996"] .lap .nav{grid-column:1/-1;height:26px}
+[data-pid="pmtg9996"] .lap .hero{grid-column:1/-1;height:150px}
+[data-pid="pmtg9996"] .lap .c{height:118px}
+[data-pid="pmtg9996"] .tab .scr{padding:0;grid-template-columns:1fr 1fr}
+[data-pid="pmtg9996"] .tab .nav{grid-column:1/-1;height:24px} [data-pid="pmtg9996"] .tab .hero{grid-column:1/-1;height:120px} [data-pid="pmtg9996"] .tab .c{height:84px}
+[data-pid="pmtg9996"] .pho .scr{padding:0}
+[data-pid="pmtg9996"] .pho .hero{height:96px} [data-pid="pmtg9996"] .pho .c{height:46px}
+[data-pid="pmtg9996"] .pho .tb{position:absolute;left:12px;right:12px;bottom:12px;height:30px;border-radius:10px;background:rgba(255,255,255,.07)}
+[data-pid="pmtg9996"] .dev b{position:absolute;bottom:-34px;left:50%;translate:-50% 0;font-size:13px;font-weight:500;white-space:nowrap;color:rgba(235,235,245,.5)}
+[data-pid="pmtg9996"] .wrap{position:absolute;inset:0}
+[data-pid="pmtg9996"] .note{position:absolute;left:80px;top:660px;width:1120px;margin:0;font-size:15px;color:rgba(235,235,245,.42)}
+[data-pid="pmtg9996"] .note code{font-family:"SF Mono",Menlo,monospace;color:rgba(235,235,245,.75)}
+@keyframes pmtg9996-shim{0%,100%{opacity:1}50%{opacity:.55}}
+@keyframes pmtg9996-up{from{opacity:0;translate:0 50px}to{opacity:1;translate:0 0}}
+@keyframes pmtg9996-fade{from{opacity:0}to{opacity:1}}
+[data-pid="pmtg9996"].active .title{animation:pmtg9996-up .8s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pmtg9996"].active .sub{animation:pmtg9996-up .8s .1s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pmtg9996"].active .dev{animation:pmtg9996-up .9s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pmtg9996"].active .lap{animation-delay:.3s} [data-pid="pmtg9996"].active .tab{animation-delay:.45s} [data-pid="pmtg9996"].active .pho{animation-delay:.6s}
+[data-pid="pmtg9996"].active .note{animation:pmtg9996-fade .8s 1.1s both}
+</style>
+<div class="glow"></div>
+<h2 class="title"><span class="grad">用途一：</span>设计你想要的网站</h2>
+<p class="sub">手机、平板、桌面都能画。画好线框，跟 AI 说一句「照画板做」，整站就出来了。</p>
+<div class="dev lap" aria-hidden="true"><div class="chrome"><i></i><i></i><i></i></div><div class="scr"><i class="k nav"></i><i class="k hero acc"></i><i class="k c"></i><i class="k c" style="animation-delay:.3s"></i><i class="k c" style="animation-delay:.6s"></i></div></div>
+<div class="dev tab" aria-hidden="true"><div class="scr"><i class="k nav"></i><i class="k hero acc"></i><i class="k c"></i><i class="k c" style="animation-delay:.4s"></i><i class="k c" style="animation-delay:.8s"></i><i class="k c" style="animation-delay:1.2s"></i></div></div>
+<div class="dev pho" aria-hidden="true"><div class="scr"><i class="k hero acc"></i><i class="k c"></i><i class="k c" style="animation-delay:.5s"></i></div><i class="tb"></i></div>
+<p class="note">画板会把布局存成 <code>board.json</code>，Claude Code、Codex 这类编程助手也能直接读懂。</p>
+
+</section>
+<section class="slide" data-pid="pmzetgd2" data-i="6" style="width:1280px;height:720px;background:#0B0B12">
+<style>
+[data-pid="pmzetgd2"]{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif;color:#f5f5f7}
+[data-pid="pmzetgd2"] .glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(520px 400px at 74% 60%,rgba(124,92,255,.2),transparent 70%)}
+[data-pid="pmzetgd2"] .title{position:absolute;left:80px;top:62px;margin:0;font-size:56px;line-height:1.3;font-weight:800;letter-spacing:-1px}
+[data-pid="pmzetgd2"] .grad{background:linear-gradient(100deg,#c7b8ff,#7C5CFF 50%,#3B82F6);-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-pid="pmzetgd2"] .sub{position:absolute;left:80px;top:150px;margin:0;font-size:22px;color:rgba(235,235,245,.62)}
+[data-pid="pmzetgd2"] .sub mark{background:none;color:#fff;font-weight:600;border-bottom:2px solid #7C5CFF}
+[data-pid="pmzetgd2"] .col{position:absolute;top:230px;width:540px;height:380px;box-sizing:border-box;padding:30px 34px;border-radius:24px}
+[data-pid="pmzetgd2"] .ppt{left:80px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)}
+[data-pid="pmzetgd2"] .us{left:660px;border:1.5px solid transparent;background:linear-gradient(#16151f,#16151f) padding-box,linear-gradient(135deg,#7C5CFF,#3B82F6) border-box;box-shadow:0 0 60px rgba(124,92,255,.18)}
+[data-pid="pmzetgd2"] .col h3{margin:0 0 14px;font-size:26px;font-weight:700}
+[data-pid="pmzetgd2"] .ppt h3{color:rgba(235,235,245,.5)}
+[data-pid="pmzetgd2"] .col ul{list-style:none;margin:0;padding:0}
+[data-pid="pmzetgd2"] .col li{display:flex;align-items:center;gap:14px;height:58px;font-size:18px;border-top:1px solid rgba(255,255,255,.06)}
+[data-pid="pmzetgd2"] .ppt li{color:rgba(235,235,245,.45)}
+[data-pid="pmzetgd2"] .col li::before{width:24px;height:24px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700}
+[data-pid="pmzetgd2"] .ppt li::before{content:"✕";background:rgba(255,255,255,.07);color:rgba(235,235,245,.4)}
+[data-pid="pmzetgd2"] .us li::before{content:"✓";background:rgba(48,209,88,.18);color:#30d158}
+[data-pid="pmzetgd2"] .keys{position:absolute;left:80px;top:652px;margin:0;font-size:15px;color:rgba(235,235,245,.45)}
+[data-pid="pmzetgd2"] kbd{display:inline-block;min-width:14px;padding:1px 7px;margin:0 2px;border-radius:6px;text-align:center;font-family:inherit;font-size:13px;color:rgba(235,235,245,.85);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-bottom-width:2px}
+@keyframes pmzetgd2-up{from{opacity:0;translate:0 30px}to{opacity:1;translate:0 0}}
+@keyframes pmzetgd2-fade{from{opacity:0}to{opacity:1}}
+[data-pid="pmzetgd2"].active .title{animation:pmzetgd2-up .8s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pmzetgd2"].active .sub{animation:pmzetgd2-up .8s .1s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pmzetgd2"].active .ppt{animation:pmzetgd2-up .8s .3s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pmzetgd2"].active .us{animation:pmzetgd2-up .9s .65s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pmzetgd2"].active .us li{animation:pmzetgd2-up .5s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pmzetgd2"].active .us li:nth-child(1){animation-delay:.9s} [data-pid="pmzetgd2"].active .us li:nth-child(2){animation-delay:1s} [data-pid="pmzetgd2"].active .us li:nth-child(3){animation-delay:1.1s} [data-pid="pmzetgd2"].active .us li:nth-child(4){animation-delay:1.2s} [data-pid="pmzetgd2"].active .us li:nth-child(5){animation-delay:1.3s}
+[data-pid="pmzetgd2"].active .keys{animation:pmzetgd2-fade .8s 1.5s both}
+</style>
+<div class="glow"></div>
+<h2 class="title"><span class="grad">用途二：</span>用网页代替 PPT</h2>
+<p class="sub">你现在看的这套演示，<mark>就是</mark>用网页画板做出来的。</p>
+<div class="col ppt">
+  <h3>传统 PPT</h3>
+  <ul><li>动画死板，只有几种模板</li><li>发给别人，对方要装软件</li><li>改个字，要找到原文件</li><li>放不了能点的交互</li><li>换个屏幕比例就变形</li></ul>
+</div>
+<div class="col us">
+  <h3>网页画板</h3>
+  <ul><li>CSS 动画，想怎么动就怎么动</li><li>发一个链接，浏览器就能看</li><li>预览里点字，直接改</li><li>按钮、复制、表单都能用</li><li>自动缩放，适配任何屏幕</li></ul>
+</div>
+<p class="keys">播放：<kbd>←</kbd> <kbd>→</kbd> 翻页 · <kbd>F</kbd> 全屏 · <kbd>Esc</kbd> 退出 · 支持 PageUp/PageDown 翻页笔</p>
+
+</section>
+<section class="slide" data-pid="pr8jnu3e" data-i="7" style="width:1280px;height:720px;background:#0B0B12">
+<style>
+[data-pid="pr8jnu3e"]{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif;color:#f5f5f7}
+[data-pid="pr8jnu3e"] .glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(520px 420px at 82% 40%,rgba(59,130,246,.16),transparent 70%),radial-gradient(480px 360px at 10% 30%,rgba(124,92,255,.16),transparent 70%)}
+[data-pid="pr8jnu3e"] .title{position:absolute;left:116px;top:94px;margin:0;font-size:80px;line-height:1.2;font-weight:800;letter-spacing:-2px;background:linear-gradient(100deg,#fff 8%,#c7b8ff 45%,#7C5CFF 75%,#3B82F6);-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-pid="pr8jnu3e"] .sub{position:absolute;left:120px;top:204px;margin:0;font-size:22px;color:rgba(235,235,245,.62)}
+[data-pid="pr8jnu3e"] .term{position:absolute;left:120px;top:272px;width:560px;height:190px;box-sizing:border-box;border-radius:16px;background:rgba(22,22,32,.72);border:1px solid rgba(255,255,255,.1);box-shadow:0 24px 60px rgba(0,0,0,.45);backdrop-filter:blur(20px);overflow:hidden}
+[data-pid="pr8jnu3e"] .tbar{height:36px;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.07)}
+[data-pid="pr8jnu3e"] .tbar i{width:12px;height:12px;border-radius:50%}
+[data-pid="pr8jnu3e"] .copy{margin-left:auto;height:24px;padding:0 12px;border:0;border-radius:12px;font-family:inherit;font-size:13px;color:rgba(235,235,245,.8);background:rgba(255,255,255,.1);cursor:pointer;transition:background .2s}
+[data-pid="pr8jnu3e"] .copy:hover{background:rgba(255,255,255,.18)}
+[data-pid="pr8jnu3e"] .copy .b,[data-pid="pr8jnu3e"] .copy.done .a{display:none} [data-pid="pr8jnu3e"] .copy.done .b{display:inline} [data-pid="pr8jnu3e"] .copy.done{color:#30d158}
+[data-pid="pr8jnu3e"] .code{margin:0;padding:20px 24px;font:19px/1.75 "SF Mono",Menlo,Consolas,monospace;color:#f5f5f7}
+[data-pid="pr8jnu3e"] .code span{display:block;width:max-content}
+[data-pid="pr8jnu3e"] .code .cmd::before{content:"$ ";color:#a996ff}
+[data-pid="pr8jnu3e"] .code .cm{color:rgba(235,235,245,.4)}
+[data-pid="pr8jnu3e"] .code .cm::after{content:"";display:inline-block;width:10px;height:20px;margin-left:6px;vertical-align:-3px;background:#a996ff;animation:pr8jnu3e-blink 1s steps(1) infinite}
+[data-pid="pr8jnu3e"] .back{position:absolute;left:120px;top:510px;width:236px;height:56px;border:0;border-radius:28px;font-family:inherit;font-size:18px;font-weight:600;color:#111;background:#fff;cursor:pointer;box-shadow:0 8px 30px rgba(255,255,255,.12);transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+[data-pid="pr8jnu3e"] .back:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(255,255,255,.22)}
+[data-pid="pr8jnu3e"] .models{position:absolute;left:760px;top:100px;width:400px;height:400px;box-sizing:border-box;padding:30px 30px 0;border-radius:24px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);box-shadow:0 24px 60px rgba(0,0,0,.4)}
+[data-pid="pr8jnu3e"] .models h3{margin:0 0 18px;font-size:24px;font-weight:700}
+[data-pid="pr8jnu3e"] .models ul{list-style:none;margin:0;padding:0}
+[data-pid="pr8jnu3e"] .models li{display:flex;align-items:center;gap:14px;height:58px;font-size:19px;border-top:1px solid rgba(255,255,255,.07)}
+[data-pid="pr8jnu3e"] .models li::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--d);box-shadow:0 0 10px var(--d)}
+[data-pid="pr8jnu3e"] .models em{margin-left:auto;padding:3px 10px;border-radius:10px;font-style:normal;font-size:13px;color:rgba(235,235,245,.7);background:rgba(255,255,255,.08)}
+[data-pid="pr8jnu3e"] .foot{position:absolute;left:120px;top:640px;margin:0;font-size:15px;color:rgba(235,235,245,.4)}
+@keyframes pr8jnu3e-blink{50%{opacity:0}}
+@keyframes pr8jnu3e-up{from{opacity:0;translate:0 24px}to{opacity:1;translate:0 0}}
+@keyframes pr8jnu3e-right{from{opacity:0;translate:60px 0}to{opacity:1;translate:0 0}}
+@keyframes pr8jnu3e-type{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes pr8jnu3e-fade{from{opacity:0}to{opacity:1}}
+[data-pid="pr8jnu3e"].active .title{animation:pr8jnu3e-up .8s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pr8jnu3e"].active .sub{animation:pr8jnu3e-up .8s .12s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pr8jnu3e"].active .term{animation:pr8jnu3e-up .8s .24s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pr8jnu3e"].active .code span{animation:pr8jnu3e-type .7s steps(18) both}
+[data-pid="pr8jnu3e"].active .code span:nth-child(1){animation-delay:.8s} [data-pid="pr8jnu3e"].active .code span:nth-child(2){animation-delay:1.6s} [data-pid="pr8jnu3e"].active .code span:nth-child(3){animation-delay:2.4s}
+[data-pid="pr8jnu3e"].active .back{animation:pr8jnu3e-up .8s .5s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pr8jnu3e"].active .models{animation:pr8jnu3e-right .9s .3s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pr8jnu3e"].active .models li{animation:pr8jnu3e-right .6s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pr8jnu3e"].active .models li:nth-child(1){animation-delay:.7s} [data-pid="pr8jnu3e"].active .models li:nth-child(2){animation-delay:.8s} [data-pid="pr8jnu3e"].active .models li:nth-child(3){animation-delay:.9s} [data-pid="pr8jnu3e"].active .models li:nth-child(4){animation-delay:1s} [data-pid="pr8jnu3e"].active .models li:nth-child(5){animation-delay:1.1s}
+[data-pid="pr8jnu3e"].active .foot{animation:pr8jnu3e-fade .8s 1.2s both}
+</style>
+<div class="glow"></div>
+<h2 class="title">现在就试试</h2>
+<p class="sub">不用装任何依赖，有 Python 就能跑。</p>
+<div class="term">
+  <div class="tbar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><button class="copy"><span class="a">复制</span><span class="b">已复制</span></button></div>
+  <pre class="code"><span class="cmd">cd 画板</span><span class="cmd">python3 server.py</span><span class="cm"># 然后打开 http://localhost:5178</span></pre>
+</div>
+<button class="back">回到开头 ↺</button>
+<div class="models">
+  <h3>接入你喜欢的模型</h3>
+  <ul>
+    <li style="--d:#4D6BFE">DeepSeek<em>默认</em></li>
+    <li style="--d:#a3a3ff">Kimi<em>国内</em></li>
+    <li style="--d:#ff7a45">通义千问<em>国内</em></li>
+    <li style="--d:#30d158">OpenAI<em>海外</em></li>
+    <li style="--d:#f5f5f7">本地 Ollama<em>离线</em></li>
+  </ul>
+</div>
+<p class="foot">MIT 开源 · 欢迎 Star 和提建议</p>
+<script>
+(function(){
+  const root=document.currentScript.closest('[data-pid]');
+  root.querySelector('.back').addEventListener('click',()=>dispatchEvent(new KeyboardEvent('keydown',{key:'Home'})));
+  const c=root.querySelector('.copy');
+  c.addEventListener('click',()=>{
+    (navigator.clipboard?navigator.clipboard.writeText('cd 画板\npython3 server.py'):Promise.reject()).catch(()=>{});
+    c.classList.add('done');setTimeout(()=>c.classList.remove('done'),1600);
+  });
+})();
+</script>
+
+</section>
+</div>
+<div id="hud"><div id="bar"></div><span id="pn"></span></div>
+<script>(function deckRuntime(){
+  var q=new URLSearchParams(location.search),embed=q.has('embed'),S=[].slice.call(document.querySelectorAll('.slide')),i=-1,st=document.getElementById('stage');
+  if(embed){document.body.classList.add('embed');document.documentElement.style.background='transparent'}
+  function fit(){
+    var vw=innerWidth,vh=innerHeight,pad=embed?40:0;
+    S.forEach(function(s){
+      var W=parseFloat(s.style.width),H=parseFloat(s.style.height),tall=H>W*1.3;
+      var k=tall?Math.min((vw-pad)/W,1):Math.min((vw-pad)/W,(vh-pad)/H);
+      s.classList.toggle('tall',tall);
+      s.style.setProperty('--base',tall?'translate(-50%,0) scale('+k+')':'translate(-50%,-50%) scale('+k+')');
+      s.style.top=tall?(pad/2)+'px':'50%';
+    });
+  }
+  function go(n,dir){
+    n=Math.max(0,Math.min(S.length-1,n));if(n===i)return;
+    if(i>=0)S[i].classList.remove('active','back');
+    i=n;var s=S[i];s.classList.toggle('back',dir<0);s.classList.add('active');st.scrollTop=0;
+    var pn=document.getElementById('pn');if(pn)pn.textContent=(i+1)+' / '+S.length;
+    var bar=document.getElementById('bar');if(bar)bar.style.width=((i+1)/S.length*100)+'%';
+    if(!embed)history.replaceState(null,'',location.pathname+location.search+'#'+(i+1));
+    if(parent!==window)parent.postMessage({deck:'page',i:i},'*');
+  }
+  var start=0,p=q.get('p');
+  if(p)S.forEach(function(s,k){if(s.getAttribute('data-pid')===p)start=k});
+  else if(/^#\d+$/.test(location.hash))start=+location.hash.slice(1)-1;
+  fit();go(start,1);addEventListener('resize',fit);
+  if(embed||!S.length)return;
+  function next(){go(i+1,1)} function prev(){go(i-1,-1)}
+  addEventListener('keydown',function(e){
+    var k=e.key,tall=S[i].classList.contains('tall');
+    if(k==='ArrowRight'||k==='PageDown'||(!tall&&(k===' '||k==='ArrowDown'||k==='Enter'))){e.preventDefault();next()}
+    else if(k==='ArrowLeft'||k==='PageUp'||(!tall&&(k==='ArrowUp'||k==='Backspace'))){e.preventDefault();prev()}
+    else if(k==='Home')go(0,-1);else if(k==='End')go(S.length-1,1);
+    else if(k==='f'||k==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}
+    else if(k==='Escape'&&parent!==window)parent.postMessage({deck:'exit'},'*');
+  });
+  document.addEventListener('click',function(e){
+    if(e.target.closest('a,button,input,textarea,select,label,video,[data-nopage],[onclick]'))return;
+    if(String(getSelection()).length)return;
+    e.clientX<innerWidth*.25?prev():next();
+  });
+})();</script>
+</body>
+</html>

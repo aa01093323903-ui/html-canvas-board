@@ -1,0 +1,350 @@
+{
+  "_readme": "网页画板数据（v2，多页面）。project=项目设置（width 宽度 px、device、background、notes=整体说明）；pages=按顺序排列的页面，每页有 title、notes=本页说明、height、generated=是否已生成网页、modules；modules 按层级从下到上，x/y/w/h 为相对该页左上角的 px，no=画布上显示的编号（全局唯一），inside=被哪个编号的模块完整包含，text=模块上显示的文字，notes.content/function/effect=内容/功能/效果。生成的网页：每页源码在 output/parts/<页面id>.html，拼好的整套在 output/index.html。",
+  "version": 2,
+  "project": {
+    "title": "网页画板 · 产品介绍",
+    "device": "slide",
+    "width": 1280,
+    "height": 720,
+    "background": "#0B0B12",
+    "notes": "给第一次听说「网页画板」的人看的 3 页演示。深色背景，主色用紫蓝渐变（#7C5CFF → #3B82F6），字体用系统字体（苹方 / SF Pro），大标题粗、留白多，像苹果发布会。每页有轻微的入场动画，点击翻页。"
+  },
+  "current": 1,
+  "seq": 17,
+  "updatedAt": "2026-11-05T05:32:21.368Z",
+  "pages": [
+    {
+      "id": "ppk7vpj9",
+      "title": "封面",
+      "notes": "开场页：一句话说清楚这是什么，让人想往下看。",
+      "height": 720,
+      "generated": true,
+      "modules": [
+        {
+          "id": "ma2a7yi4",
+          "no": 1,
+          "type": "heading",
+          "typeName": "标题",
+          "name": "产品名",
+          "x": 120,
+          "y": 200,
+          "w": 620,
+          "h": 110,
+          "inside": null,
+          "text": "网页画板",
+          "notes": {
+            "content": "产品名，全页最大的字",
+            "function": "",
+            "effect": "紫蓝渐变文字，进场时从下往上淡入，字重最粗"
+          }
+        },
+        {
+          "id": "mkn9qhap",
+          "no": 2,
+          "type": "text",
+          "typeName": "正文",
+          "name": "一句话介绍",
+          "x": 120,
+          "y": 330,
+          "w": 560,
+          "h": 76,
+          "inside": null,
+          "text": "画个草图，写几句备注，AI 帮你做成能翻页的网页。",
+          "notes": {
+            "content": "一句话说明产品价值",
+            "function": "",
+            "effect": "浅灰色，字号约 26px，比标题晚 0.15 秒淡入"
+          }
+        },
+        {
+          "id": "ma523el5",
+          "no": 3,
+          "type": "button",
+          "typeName": "按钮",
+          "name": "按钮",
+          "x": 120,
+          "y": 446,
+          "w": 168,
+          "h": 54,
+          "inside": null,
+          "text": "往下看 →",
+          "notes": {
+            "content": "",
+            "function": "点击翻到下一页",
+            "effect": "紫蓝渐变圆角胶囊，悬停时微微上浮并发光"
+          }
+        },
+        {
+          "id": "makgcndp",
+          "no": 4,
+          "type": "image",
+          "typeName": "图片",
+          "name": "画板示意图",
+          "x": 760,
+          "y": 140,
+          "w": 420,
+          "h": 440,
+          "inside": null,
+          "text": "",
+          "notes": {
+            "content": "用 CSS 画一个画板的缩略示意：一块深色画布，上面漂着 3~4 个圆角矩形模块，每个左上角有圆形编号徽标",
+            "function": "",
+            "effect": "模块缓慢上下浮动，错开节奏；整体带一点紫色光晕"
+          }
+        },
+        {
+          "id": "myi2nltm",
+          "no": 5,
+          "type": "text",
+          "typeName": "正文",
+          "name": "底部小字",
+          "x": 120,
+          "y": 612,
+          "w": 560,
+          "h": 32,
+          "inside": null,
+          "text": "开源 · 本地运行 · 支持 DeepSeek 等模型",
+          "notes": {
+            "content": "三个卖点，用「·」分隔",
+            "function": "",
+            "effect": "很小的灰字，最后淡入"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pwnk6882",
+      "title": "三步流程",
+      "notes": "讲清楚怎么用：三张卡片从左到右依次出现，中间用细箭头连起来，像一条流水线。",
+      "height": 720,
+      "generated": true,
+      "modules": [
+        {
+          "id": "mul5daj0",
+          "no": 6,
+          "type": "heading",
+          "typeName": "标题",
+          "name": "页标题",
+          "x": 140,
+          "y": 84,
+          "w": 1000,
+          "h": 84,
+          "inside": null,
+          "text": "三步，把想法变成网页",
+          "notes": {
+            "content": "",
+            "function": "",
+            "effect": "居中，白色粗体，进场淡入"
+          }
+        },
+        {
+          "id": "maxqb5lt",
+          "no": 7,
+          "type": "text",
+          "typeName": "正文",
+          "name": "副标题",
+          "x": 340,
+          "y": 176,
+          "w": 600,
+          "h": 40,
+          "inside": null,
+          "text": "不用写代码，也不用会设计。",
+          "notes": {
+            "content": "",
+            "function": "",
+            "effect": "居中浅灰色"
+          }
+        },
+        {
+          "id": "my13gjgr",
+          "no": 8,
+          "type": "box",
+          "typeName": "自由框",
+          "name": "步骤 1",
+          "x": 140,
+          "y": 270,
+          "w": 300,
+          "h": 330,
+          "inside": null,
+          "text": "摆模块\n像摆家具一样，把导航、标题、图片拖到画布上",
+          "notes": {
+            "content": "卡片顶部一个大号「01」，下面是标题和说明文字",
+            "function": "",
+            "effect": "毛玻璃卡片，进场依次从下往上弹出，间隔 0.12 秒；悬停时卡片抬起"
+          }
+        },
+        {
+          "id": "mi0ppgnf",
+          "no": 9,
+          "type": "box",
+          "typeName": "自由框",
+          "name": "步骤 2",
+          "x": 490,
+          "y": 270,
+          "w": 300,
+          "h": 330,
+          "inside": null,
+          "text": "写备注\n给每个模块写上内容、功能、效果",
+          "notes": {
+            "content": "顶部大号「02」，再加三个小圆点标签：内容 / 功能 / 效果",
+            "function": "",
+            "effect": "同上"
+          }
+        },
+        {
+          "id": "mn39lr7w",
+          "no": 10,
+          "type": "box",
+          "typeName": "自由框",
+          "name": "步骤 3",
+          "x": 840,
+          "y": 270,
+          "w": 300,
+          "h": 330,
+          "inside": null,
+          "text": "一键生成\nAI 按画板做成网页，还能直接点字修改",
+          "notes": {
+            "content": "顶部大号「03」",
+            "function": "",
+            "effect": "同上，这张卡片边框用紫蓝渐变，表示是终点"
+          }
+        },
+        {
+          "id": "m8jl2cdn",
+          "no": 11,
+          "type": "text",
+          "typeName": "正文",
+          "name": "底部提示",
+          "x": 340,
+          "y": 636,
+          "w": 600,
+          "h": 32,
+          "inside": null,
+          "text": "做完一页，点「+」继续设计下一页",
+          "notes": {
+            "content": "",
+            "function": "",
+            "effect": "小号灰字"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pr8jnu3e",
+      "title": "开始使用",
+      "notes": "收尾页：左边告诉人怎么跑起来，右边告诉人能接哪些模型，最后一个按钮回到开头。",
+      "height": 720,
+      "generated": true,
+      "modules": [
+        {
+          "id": "mtqpsv1u",
+          "no": 12,
+          "type": "heading",
+          "typeName": "标题",
+          "name": "页标题",
+          "x": 120,
+          "y": 100,
+          "w": 560,
+          "h": 90,
+          "inside": null,
+          "text": "现在就试试",
+          "notes": {
+            "content": "",
+            "function": "",
+            "effect": "左对齐，渐变文字，和封面标题同一风格"
+          }
+        },
+        {
+          "id": "mq4fo3tl",
+          "no": 13,
+          "type": "text",
+          "typeName": "正文",
+          "name": "副标题",
+          "x": 120,
+          "y": 200,
+          "w": 520,
+          "h": 40,
+          "inside": null,
+          "text": "不用装任何依赖，有 Python 就能跑。",
+          "notes": {
+            "content": "",
+            "function": "",
+            "effect": "浅灰色"
+          }
+        },
+        {
+          "id": "mls1fcdd",
+          "no": 14,
+          "type": "box",
+          "typeName": "自由框",
+          "name": "命令行",
+          "x": 120,
+          "y": 272,
+          "w": 560,
+          "h": 190,
+          "inside": null,
+          "text": "cd 画板\npython3 server.py\n# 然后打开 http://localhost:5178",
+          "notes": {
+            "content": "三行命令，等宽字体，注释行是灰色",
+            "function": "右上角一个「复制」小按钮，点了把前两行命令复制到剪贴板，按钮文字变成「已复制」",
+            "effect": "像 macOS 终端窗口：顶部三个红黄绿小圆点，深色半透明毛玻璃，命令一行一行打字机式出现"
+          }
+        },
+        {
+          "id": "mlkw5ans",
+          "no": 15,
+          "type": "button",
+          "typeName": "按钮",
+          "name": "按钮",
+          "x": 120,
+          "y": 510,
+          "w": 236,
+          "h": 56,
+          "inside": null,
+          "text": "回到开头 ↺",
+          "notes": {
+            "content": "",
+            "function": "点击回到第 1 页",
+            "effect": "白底黑字胶囊按钮，和封面按钮对应"
+          }
+        },
+        {
+          "id": "mkmgjr90",
+          "no": 16,
+          "type": "list",
+          "typeName": "列表",
+          "name": "模型列表",
+          "x": 760,
+          "y": 100,
+          "w": 400,
+          "h": 400,
+          "inside": null,
+          "text": "",
+          "notes": {
+            "content": "标题「接入你喜欢的模型」，下面 5 行：DeepSeek、Kimi、通义千问、OpenAI、本地 Ollama，每行左边一个彩色圆点，右边一个小标签（默认 / 国内 / 国内 / 海外 / 离线）",
+            "function": "",
+            "effect": "卡片从右侧滑入，列表行依次出现"
+          }
+        },
+        {
+          "id": "menraa6e",
+          "no": 17,
+          "type": "text",
+          "typeName": "正文",
+          "name": "底部小字",
+          "x": 120,
+          "y": 636,
+          "w": 520,
+          "h": 30,
+          "inside": null,
+          "text": "MIT 开源 · 欢迎 Star 和提建议",
+          "notes": {
+            "content": "",
+            "function": "",
+            "effect": "小号灰字"
+          }
+        }
+      ]
+    }
+  ]
+}

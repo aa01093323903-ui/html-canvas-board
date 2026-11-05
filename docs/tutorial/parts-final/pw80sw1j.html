@@ -1,0 +1,51 @@
+<style>
+[data-pid="pw80sw1j"]{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif;color:#f5f5f7}
+[data-pid="pw80sw1j"] .glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(600px 300px at 50% 28%,rgba(124,92,255,.2),transparent 70%)}
+[data-pid="pw80sw1j"] .title{position:absolute;left:140px;top:60px;width:1000px;margin:0;text-align:center;font-size:58px;line-height:1.3;font-weight:800;letter-spacing:-1px}
+[data-pid="pw80sw1j"] kbd{display:inline-block;padding:0 14px;margin:0 6px;border-radius:14px;font-family:inherit;font-size:.82em;line-height:1.3;background:linear-gradient(#2a2a36,#1b1b24);border:1px solid rgba(255,255,255,.18);box-shadow:0 4px 0 rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12)}
+[data-pid="pw80sw1j"] .pal{position:absolute;left:340px;top:170px;width:600px;height:60px;box-sizing:border-box;display:flex;align-items:center;gap:14px;padding:0 22px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);box-shadow:0 20px 50px rgba(0,0,0,.45),0 0 60px rgba(124,92,255,.15);backdrop-filter:blur(20px)}
+[data-pid="pw80sw1j"] .pal svg{width:22px;height:22px;flex:none;color:#b9a8ff}
+[data-pid="pw80sw1j"] .pal span{font-size:19px;white-space:nowrap}
+[data-pid="pw80sw1j"] .pal i{width:2px;height:24px;background:#b9a8ff;animation:pw80sw1j-blink 1s steps(1) infinite}
+[data-pid="pw80sw1j"] .card{position:absolute;top:280px;width:260px;height:280px}
+[data-pid="pw80sw1j"] .c1{left:80px} [data-pid="pw80sw1j"] .c2{left:366px} [data-pid="pw80sw1j"] .c3{left:653px} [data-pid="pw80sw1j"] .c4{left:940px}
+[data-pid="pw80sw1j"] .in{height:100%;box-sizing:border-box;padding:28px 24px;display:flex;flex-direction:column;border-radius:22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s}
+[data-pid="pw80sw1j"] .in:hover{transform:translateY(-8px);border-color:rgba(255,255,255,.22)}
+[data-pid="pw80sw1j"] .c4 .in{border:1.5px solid transparent;background:linear-gradient(#15141f,#15141f) padding-box,linear-gradient(135deg,#7C5CFF,#3B82F6) border-box}
+[data-pid="pw80sw1j"] .ico{flex:none;margin-bottom:auto;width:50px;height:50px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(124,92,255,.9),rgba(59,130,246,.9));box-shadow:0 8px 20px rgba(124,92,255,.35)}
+[data-pid="pw80sw1j"] .ico svg{width:26px;height:26px;color:#fff}
+[data-pid="pw80sw1j"] .card h3{margin:26px 0 10px;font-size:24px;font-weight:700}
+[data-pid="pw80sw1j"] .card p{margin:0;font-size:15px;line-height:1.65;text-wrap:balance;color:rgba(235,235,245,.6)}
+[data-pid="pw80sw1j"] .models{position:absolute;left:140px;top:612px;width:1000px;margin:0;text-align:center;font-size:16px;color:rgba(235,235,245,.42)}
+[data-pid="pw80sw1j"] .models b{font-weight:500;color:rgba(235,235,245,.8)}
+@keyframes pw80sw1j-blink{50%{opacity:0}}
+@keyframes pw80sw1j-up{from{opacity:0;translate:0 30px}to{opacity:1;translate:0 0}}
+@keyframes pw80sw1j-type{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes pw80sw1j-fade{from{opacity:0}to{opacity:1}}
+[data-pid="pw80sw1j"].active .title{animation:pw80sw1j-up .8s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pw80sw1j"].active .pal{animation:pw80sw1j-up .8s .15s cubic-bezier(.2,.8,.2,1) both}
+[data-pid="pw80sw1j"].active .pal span{animation:pw80sw1j-type 1.4s .7s steps(15) both}
+[data-pid="pw80sw1j"].active .card{animation:pw80sw1j-up .8s cubic-bezier(.34,1.4,.5,1) both}
+[data-pid="pw80sw1j"].active .c1{animation-delay:.5s} [data-pid="pw80sw1j"].active .c2{animation-delay:.6s} [data-pid="pw80sw1j"].active .c3{animation-delay:.7s} [data-pid="pw80sw1j"].active .c4{animation-delay:.8s}
+[data-pid="pw80sw1j"].active .models{animation:pw80sw1j-fade .8s 1.2s both}
+</style>
+<div class="glow"></div>
+<h2 class="title">按 <kbd>⌘K</kbd>，让 AI 帮你干活</h2>
+<div class="pal"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6zM19 15l.9 2.4 2.1.6-2.1.7L19 21l-.9-2.3-2.1-.7 2.1-.6z"/></svg><span>让 AI 排一页产品发布会的封面</span><i></i></div>
+<div class="card c1"><div class="in">
+  <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="6" rx="1.5"/><rect x="3" y="12" width="8" height="9" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/></svg></div>
+  <h3>自动排版</h3><p>一句话描述，AI 帮你摆好整页线框</p>
+</div></div>
+<div class="card c2"><div class="in">
+  <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg></div>
+  <h3>整套大纲</h3><p>给个主题，一次规划好每一页</p>
+</div></div>
+<div class="card c3"><div class="in">
+  <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13 7 4 4"/></svg></div>
+  <h3>补写备注</h3><p>选中模块，AI 帮你把内容、功能、效果写具体</p>
+</div></div>
+<div class="card c4"><div class="in">
+  <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-5 4 5 4M16 8l5 4-5 4M14 4l-4 16"/></svg></div>
+  <h3>生成网页</h3><p>按线框和备注写出整页网页，边写边显示进度</p>
+</div></div>
+<p class="models">支持 <b>DeepSeek</b>、<b>Kimi</b>、<b>通义千问</b>、<b>OpenAI</b>、<b>本地 Ollama</b> —— 任何 OpenAI 兼容接口</p>

@@ -1,0 +1,9 @@
+# 用户自己的数据和密钥
+config.json
+board.json
+board.*.json
+output/
+
+*.tmp
+.DS_Store
+__pycache__/

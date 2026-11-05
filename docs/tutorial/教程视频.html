@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>网页画板 · 使用教程</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#000;overflow:hidden;-webkit-font-smoothing:antialiased;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif;color:#f5f5f7}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform:translate(-50%,-50%) scale(var(--k,.5));overflow:hidden;background:#07070b}
+#bgA,#bgB{position:absolute;width:1400px;height:1400px;border-radius:50%;filter:blur(60px);pointer-events:none}
+#bgA{background:radial-gradient(closest-side,rgba(124,92,255,.32),transparent)}
+#bgB{background:radial-gradient(closest-side,rgba(59,130,246,.22),transparent)}
+#scene{position:absolute;inset:0}
+.abs{position:absolute}
+.grad{background:linear-gradient(100deg,#fff 5%,#c7b8ff 40%,#7C5CFF 70%,#3B82F6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.grad2{background:linear-gradient(100deg,#b9a8ff,#7C5CFF 55%,#3B82F6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.chips{position:absolute;left:0;right:0;display:flex;justify-content:center;gap:24px}
+.chips .chip{position:static}
+.center{left:0;right:0;text-align:center}
+.caret{display:inline-block;width:2px;height:1em;margin-left:2px;vertical-align:-.12em;background:currentColor;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* 字幕 */
+#cap{position:absolute;left:50%;bottom:26px;display:flex;align-items:center;gap:14px;padding:12px 26px 12px 14px;border-radius:30px;background:rgba(20,20,28,.78);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(20px);box-shadow:0 10px 40px rgba(0,0,0,.4);font-size:26px;font-weight:500;white-space:nowrap;opacity:0}
+#cap b{min-width:38px;height:38px;padding:0 10px;border-radius:19px;display:grid;place-items:center;font-size:19px;font-weight:700;color:#fff;background:linear-gradient(135deg,#7C5CFF,#3B82F6)}
+
+/* 光标 */
+#cur{position:absolute;left:0;top:0;width:34px;height:34px;opacity:0;z-index:50;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));pointer-events:none}
+#ripple{position:absolute;left:0;top:0;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;border:3px solid rgba(10,132,255,.8);opacity:0;z-index:49;pointer-events:none}
+
+/* 画板界面（浅色，和真实画板一致） */
+.app{position:absolute;left:160px;top:60px;width:1600px;height:900px;border-radius:22px;overflow:hidden;color:#1d1d1f;background:#ececf0;background-image:radial-gradient(rgba(0,0,0,.09) 1.2px,transparent 1.2px);background-size:22px 22px;box-shadow:0 40px 120px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08)}
+.glass{position:absolute;background:rgba(255,255,255,.86);border-radius:16px;box-shadow:0 0 0 .5px rgba(0,0,0,.08),0 6px 24px rgba(0,0,0,.07)}
+.tb{left:12px;top:12px;right:12px;height:52px;display:flex;align-items:center;gap:14px;padding:0 14px}
+.tb-ic{width:20px;height:16px;border:2px solid #3a3a3c;border-radius:4px}
+.tb-title{min-width:220px;font-size:16px;font-weight:600}
+.tb-title.ph{color:#a1a1a6}
+.seg{display:flex;padding:3px;border-radius:10px;background:rgba(120,120,128,.14);font-size:14px;margin-left:220px}
+.seg b{padding:5px 16px;border-radius:8px;font-weight:500}
+.seg b.on{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.tb-sp{flex:1}
+.tb-zoom{font-size:14px;color:#3a3a3c}
+.tb-ai{padding:7px 14px;border-radius:10px;font-size:14px;font-weight:600;color:#fff;background:linear-gradient(135deg,#9f6bff,#6f5cff)}
+.tb-play{padding:7px 14px;border-radius:10px;font-size:14px;background:rgba(120,120,128,.14)}
+.lib{left:12px;top:76px;width:220px;bottom:12px;padding:12px}
+.tabs{display:flex;padding:3px;border-radius:10px;background:rgba(120,120,128,.12);font-size:14px;margin-bottom:12px}
+.tabs b{flex:1;text-align:center;padding:5px;border-radius:8px;font-weight:500}
+.tabs b.on{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.lib h6{margin:12px 6px 6px;font-size:12px;font-weight:500;color:#8e8e93}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.tile{height:62px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:12px;color:#3a3a3c}
+.tile svg{width:22px;height:22px;color:#0A84FF}
+.tile.hot{background:rgba(10,132,255,.12)}
+.cv{position:absolute;left:244px;top:76px;width:1042px;height:690px}
+.ab-label{position:absolute;left:98px;top:90px;font-size:13px;color:#6e6e73}
+.ab-label b{color:#1d1d1f;margin-right:6px}
+.ab{position:absolute;left:98px;top:117px;width:1280px;height:720px;transform:scale(.66);transform-origin:0 0;background:#0B0B12;box-shadow:0 2px 20px rgba(0,0,0,.18)}
+.insp{left:1298px;top:76px;width:290px;bottom:12px;padding:18px;font-size:14px}
+.insp label{display:block;margin:16px 0 7px;font-size:12px;color:#8e8e93}
+.insp label:first-child{margin-top:0}
+.fld{min-height:36px;padding:8px 11px;border-radius:9px;background:rgba(120,120,128,.1);line-height:1.5;color:#1d1d1f;white-space:pre-wrap}
+.fld.big{font-size:16px;font-weight:600}
+.fld.area{min-height:64px}
+.fld.on{box-shadow:0 0 0 3px rgba(10,132,255,.25);background:#fff}
+.fld .caret{background:#0A84FF}
+.row2{display:flex;gap:10px;align-items:center}
+.sw{width:56px;height:30px;border-radius:8px;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
+.mh{display:flex;gap:12px;align-items:center}
+.mh i{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-style:normal;font-weight:700;color:#0A84FF;background:rgba(10,132,255,.12)}
+.mh small{display:block;font-size:12px;color:#8e8e93}
+.dotl{display:flex;align-items:center;gap:7px;margin:14px 0 7px;font-size:13px;font-weight:500}
+.dotl::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--d)}
+.strip{left:244px;top:778px;width:1042px;height:110px}
+.th{position:absolute;top:18px;width:104px;height:58.5px;border-radius:7px;overflow:hidden;background:#0B0B12;box-shadow:0 0 0 1px rgba(0,0,0,.1)}
+.th.on{box-shadow:0 0 0 2.5px #0A84FF}
+.th .in{position:absolute;left:0;top:0;width:1280px;height:720px;transform:scale(.08125);transform-origin:0 0}
+.th .in i{position:absolute;border-radius:14px;background:rgba(210,210,225,.22)}
+.th em{position:absolute;right:4px;top:4px;width:10px;height:10px;border-radius:50%;background:#30d158;box-shadow:0 0 0 2px #fff}
+.thn{position:absolute;top:82px;width:104px;text-align:center;font-size:12px;color:#8e8e93}
+.addp{position:absolute;top:28px;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:24px;color:#8e8e93;background:rgba(120,120,128,.1)}
+
+/* 画布上的模块（深色背景线框） */
+.m{position:absolute;border-radius:12px;background:#1d1d27;box-shadow:inset 0 0 0 1.5px rgba(210,210,225,.22)}
+.m.sel{box-shadow:inset 0 0 0 1.5px rgba(210,210,225,.22),0 0 0 3px #0A84FF}
+.m .badge{position:absolute;left:-14px;top:-14px;min-width:32px;height:32px;padding:0 8px;border-radius:16px;display:grid;place-items:center;font-size:17px;font-weight:600;color:#fff;background:#6e6e78;box-shadow:0 0 0 3px #0B0B12;z-index:2}
+.m.sel .badge{background:#0A84FF}
+.mc{position:absolute;inset:0;overflow:hidden;border-radius:inherit;display:flex;flex-direction:column;justify-content:center;padding:0 22px;color:#f5f5f7}
+.mc .h{font-size:min(80px,60cqh);font-weight:800;letter-spacing:-1px;white-space:nowrap}
+.m.t-heading .mc{container-type:size}
+.mc .p{font-size:24px;line-height:1.4;color:rgba(235,235,245,.75)}
+.mc .sk{height:12px;margin:6px 0;border-radius:6px;background:rgba(210,210,225,.2)}
+.mc .btn{align-self:stretch;text-align:center;font-size:22px;font-weight:600}
+.t-button{background:#3a3a48}
+.mc .bx{text-align:center;font-size:22px;line-height:1.5;color:rgba(235,235,245,.7);white-space:pre-line}
+.mc svg{align-self:center;width:64px;height:64px;color:rgba(210,210,225,.55)}
+.mc .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;padding:18px 0}
+.mc .grid i{aspect-ratio:1;border-radius:10px;background:rgba(210,210,225,.14)}
+.mc .li{display:flex;align-items:center;gap:14px;height:56px;border-bottom:1px solid rgba(210,210,225,.1)}
+.mc .li i{width:30px;height:30px;border-radius:50%;background:rgba(210,210,225,.18)}
+.mc .li s{flex:1;height:10px;border-radius:5px;background:rgba(210,210,225,.16)}
+.t-search{border-radius:30px}
+.mc .srch{display:flex;align-items:center;gap:14px;font-size:22px;color:rgba(235,235,245,.75)}
+
+/* AI 命令面板和忙碌提示 */
+.pal{position:absolute;left:370px;top:170px;width:620px;padding:12px;border-radius:20px;background:rgba(255,255,255,.92);backdrop-filter:blur(30px);box-shadow:0 30px 80px rgba(0,0,0,.3),0 0 0 .5px rgba(0,0,0,.1);z-index:5}
+.pal .q{display:flex;align-items:center;gap:12px;height:50px;padding:0 12px;font-size:18px;color:#a1a1a6;border-bottom:1px solid rgba(0,0,0,.07);margin-bottom:8px}
+.pal .q svg{width:22px;height:22px;color:#7C5CFF}
+.pal .it{display:flex;align-items:center;gap:12px;height:48px;padding:0 14px;border-radius:12px;font-size:17px}
+.pal .it i{width:28px;height:28px;border-radius:8px;background:rgba(124,92,255,.14)}
+.pal .it small{margin-left:auto;font-size:13px;color:#8e8e93}
+.pal .it.on{color:#fff;background:linear-gradient(100deg,#7C5CFF,#3B82F6)}
+.pal .it.on i{background:rgba(255,255,255,.25)} .pal .it.on small{color:rgba(255,255,255,.8)}
+.busy{position:absolute;left:50%;top:22px;translate:-50% 0;display:flex;align-items:center;gap:12px;padding:10px 20px;border-radius:24px;font-size:16px;font-weight:500;color:#fff;background:rgba(30,30,40,.88);box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:6;white-space:nowrap}
+.busy i{width:16px;height:16px;border-radius:50%;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sweep{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.sweep i{position:absolute;top:0;bottom:0;width:260px;background:linear-gradient(90deg,transparent,rgba(124,92,255,.35),transparent)}
+
+/* 嵌入的成品页面 */
+.deck{position:absolute;overflow:hidden;border-radius:14px;background:#0B0B12;box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08)}
+.deck iframe{position:absolute;left:0;top:0;border:0;pointer-events:none}
+.chip{position:absolute;padding:8px 18px;border-radius:20px;font-size:20px;font-weight:600;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)}
+.chip.g{background:linear-gradient(100deg,rgba(124,92,255,.85),rgba(59,130,246,.85));border:0}
+
+/* 片头片尾 */
+.logo{position:absolute;width:150px;height:150px;border-radius:38px;background:linear-gradient(135deg,#7C5CFF,#3B82F6);box-shadow:0 30px 80px rgba(124,92,255,.5),inset 0 1px 0 rgba(255,255,255,.3);display:grid;place-items:center}
+.logo svg{width:84px;height:84px;color:#fff}
+.term{position:absolute;border-radius:20px;background:rgba(22,22,32,.85);border:1px solid rgba(255,255,255,.12);box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden}
+.term .bar{height:44px;display:flex;align-items:center;gap:9px;padding:0 18px;border-bottom:1px solid rgba(255,255,255,.07)}
+.term .bar i{width:14px;height:14px;border-radius:50%}
+.term pre{margin:0;padding:26px 30px;font:28px/1.8 "SF Mono",Menlo,Consolas,monospace}
+.pain{position:absolute;padding:20px 32px;border-radius:22px;font-size:34px;font-weight:500;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);white-space:nowrap}
+
+/* 播放控制 */
+#ctl{position:fixed;left:0;right:0;bottom:0;padding:30px 24px 16px;background:linear-gradient(transparent,rgba(0,0,0,.75));display:flex;align-items:center;gap:16px;font-size:13px;color:rgba(255,255,255,.85);transition:opacity .4s;z-index:10}
+body.idle #ctl{opacity:0}
+body.clean #ctl{display:none}
+#pp{width:36px;height:36px;flex:none;border:0;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;font-size:15px;cursor:pointer}
+#pp:hover{background:rgba(255,255,255,.28)}
+#time{font-variant-numeric:tabular-nums;flex:none;width:96px}
+#prog{position:relative;flex:1;height:22px;cursor:pointer}
+#prog .tr{position:absolute;left:0;right:0;top:9px;height:4px;border-radius:2px;background:rgba(255,255,255,.2)}
+#prog .fl{position:absolute;left:0;top:9px;height:4px;border-radius:2px;background:linear-gradient(90deg,#7C5CFF,#3B82F6)}
+#prog .tk{position:absolute;top:6px;width:2px;height:10px;background:rgba(255,255,255,.45)}
+#prog .tip{position:absolute;bottom:26px;translate:-50% 0;padding:5px 10px;border-radius:7px;background:rgba(30,30,40,.95);white-space:nowrap;display:none}
+#prog:hover .tip{display:block}
+#chap{flex:none;width:200px;text-align:right;color:rgba(255,255,255,.6)}
+#over{position:fixed;inset:0;display:none;place-items:center;z-index:20;background:rgba(0,0,0,.35)}
+#over.on{display:grid}
+#over button{padding:16px 34px;border:0;border-radius:30px;font-size:18px;font-weight:600;color:#fff;background:linear-gradient(100deg,#7C5CFF,#3B82F6);cursor:pointer;box-shadow:0 10px 40px rgba(124,92,255,.5)}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bgA"></div><div id="bgB"></div>
+  <div id="scene"></div>
+  <div id="ripple"></div>
+  <svg id="cur" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-3 6z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round"/></svg>
+  <div id="cap"><b></b><span></span></div>
+</div>
+<div id="ctl">
+  <button id="pp" title="播放 / 暂停（空格）">❚❚</button>
+  <span id="time"></span>
+  <div id="prog"><div class="tr"></div><div class="fl"></div><div class="tip"></div></div>
+  <span id="chap"></span>
+</div>
+<div id="over"><button>↻ 再看一遍</button></div>
+<script>
+/* 数据来自 states/17-八页成品.json（画板实测时保存的快照） */
+const DATA={"title":"网页画板 · 产品介绍","notes":"给第一次听说「网页画板」的人看的 8 页演示。深色背景，主色用紫蓝渐变（#7C5CFF → #3B82F6），字体用系统字体（苹方 / SF Pro），大标题粗、留白多，像苹果发布会。每页有轻微的入场动画，点击翻页。","pages":[{"id":"ppk7vpj9","title":"封面","notes":"开场页：一句话说清楚这是什么，让人想往下看。","mods":[[1,"heading",120,200,620,110,"网页画板","产品名",["产品名，全页最大的字","","紫蓝渐变文字，进场时从下往上淡入，字重最粗"]],[2,"text",120,330,560,76,"画个草图，写几句备注，AI 帮你做成能翻页的网页。","一句话介绍",["一句话说明产品价值","","浅灰色，字号约 26px，比标题晚 0.15 秒淡入"]],[3,"button",120,446,168,54,"往下看 →","按钮",["","点击翻到下一页","紫蓝渐变圆角胶囊，悬停时微微上浮并发光"]],[4,"image",760,140,420,440,"","画板示意图",["用 CSS 画一个画板的缩略示意：一块深色画布，上面漂着 3~4 个圆角矩形模块，每个左上角有圆形编号徽标","","模块缓慢上下浮动，错开节奏；整体带一点紫色光晕"]],[5,"text",120,612,560,32,"开源 · 本地运行 · 支持 DeepSeek 等模型","底部小字",["三个卖点，用「·」分隔","","很小的灰字，最后淡入"]]]},{"id":"pwnk6882","title":"三步流程","notes":"讲清楚怎么用：三张卡片从左到右依次出现，中间用细箭头连起来，像一条流水线。","mods":[[6,"heading",140,84,1000,84,"三步，把想法变成网页","页标题"],[7,"text",340,176,600,40,"不用写代码，也不用会设计。","副标题"],[8,"box",140,270,300,330,"摆模块\n像摆家具一样，把导航、标题、图片拖到画布上","步骤 1"],[9,"box",490,270,300,330,"写备注\n给每个模块写上内容、功能、效果","步骤 2"],[10,"box",840,270,300,330,"一键生成\nAI 按画板做成网页，还能直接点字修改","步骤 3"],[11,"text",340,636,600,32,"做完一页，点「+」继续设计下一页","底部提示"]]},{"id":"ps5k0y9q","title":"画布编辑","notes":"功能 1：画布。让人感到「拖起来很顺手」。左边是一个会动的小画板演示，右边是 6 个功能点。","mods":[[18,"heading",80,70,700,76,"像摆家具一样排版","页标题"],[19,"text",80,156,600,60,"23 种预设模块，拖进来、拉大小、对齐，全程跟手不卡顿。","副标题"],[20,"image",80,250,640,400,"","画板动画"],[21,"grid",780,250,420,400,"","功能格子"]]},{"id":"pw80sw1j","title":"AI 助手","notes":"功能 2：AI。按 ⌘K 打开命令面板，四件事 AI 都能帮你做；能接任何 OpenAI 兼容的模型。","mods":[[22,"heading",140,64,1000,76,"按 ⌘K，让 AI 帮你干活","页标题"],[23,"search",340,170,600,60,"让 AI 排一页产品发布会的封面","命令面板"],[24,"box",80,280,260,280,"自动排版\n一句话描述，AI 帮你摆好整页线框","能力 1"],[25,"box",366,280,260,280,"整套大纲\n给个主题，一次规划好每一页","能力 2"],[26,"box",653,280,260,280,"补写备注\n选中模块，AI 帮你把内容、功能、效果写具体","能力 3"],[27,"box",940,280,260,280,"生成网页\n按线框和备注写出整页网页，边写边显示进度","能力 4"],[28,"text",140,610,1000,40,"支持 DeepSeek、Kimi、通义千问、OpenAI、本地 Ollama —— 任何 OpenAI 兼容接口","模型说明"]]},{"id":"p7g7tfqd","title":"边看边改","notes":"功能 3：生成之后还能改，不用重新来过。左边三种改法，右边一个演示窗口。","mods":[[29,"heading",80,80,520,80,"生成之后，还能直接改","页标题"],[30,"text",80,168,500,60,"不满意的地方，点一下就能改，改完自动存回源码。","副标题"],[31,"box",80,270,500,96,"点字改字\n直接在网页上打字，像改文档一样","改法 1"],[32,"box",80,384,500,96,"选中元素问 AI\n比如「这个按钮换成绿色，再大一点」","改法 2"],[33,"box",80,498,500,96,"整页重写，一键撤销\n一句话改整页风格，不满意就退回上一版","改法 3"],[34,"image",640,90,560,540,"","改字演示"]]},{"id":"pmtg9996","title":"用途：做网站","notes":"用途 1：设计网站。同一套线框适配不同设备，画好以后交给 AI 或 Claude Code 照着做。","mods":[[35,"heading",80,64,800,76,"用途一：设计你想要的网站","页标题"],[36,"text",80,148,720,60,"手机、平板、桌面都能画。画好线框，跟 AI 说一句「照画板做」，整站就出来了。","副标题"],[37,"image",80,250,600,380,"","桌面设备"],[38,"image",720,270,260,360,"","平板设备"],[39,"image",1010,300,190,330,"","手机设备"],[40,"text",80,656,1120,32,"画板会把布局存成 board.json，Claude Code、Codex 这类编程助手也能直接读懂。","底部说明"]]},{"id":"pmzetgd2","title":"用途：代替 PPT","notes":"用途 2：做演示。对比传统 PPT 的痛点，强调「这套演示本身就是用网页画板做的」。","mods":[[41,"heading",80,64,800,76,"用途二：用网页代替 PPT","页标题"],[42,"text",80,148,720,40,"你现在看的这套演示，就是用网页画板做出来的。","副标题"],[43,"box",80,230,540,380,"传统 PPT","PPT 一栏"],[44,"box",660,230,540,380,"网页画板","画板一栏"],[45,"text",80,650,1120,36,"播放：← → 翻页 · F 全屏 · Esc 退出 · 支持 PageUp/PageDown 翻页笔","快捷键"]]},{"id":"pr8jnu3e","title":"开始使用","notes":"收尾页：左边告诉人怎么跑起来，右边告诉人能接哪些模型，最后一个按钮回到开头。","mods":[[12,"heading",120,100,560,90,"现在就试试","页标题"],[13,"text",120,200,520,40,"不用装任何依赖，有 Python 就能跑。","副标题"],[14,"box",120,272,560,190,"cd 画板\npython3 server.py\n# 然后打开 http://localhost:5178","命令行"],[15,"button",120,510,236,56,"回到开头 ↺","按钮"],[16,"list",760,100,400,400,"","模型列表"],[17,"text",120,636,520,30,"MIT 开源 · 欢迎 Star 和提建议","底部小字"]]}]};
+
+/* ---------- 小工具 ---------- */
+const stage=document.getElementById('stage'),scene=document.getElementById('scene');
+const el=(tag,cls,parent,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(parent)parent.appendChild(e);return e};
+const css=(e,o)=>{for(const k in o)e.style[k]=o[k];return e};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const seg=(t,a,b)=>clamp((t-a)/(b-a));
+const lerp=(a,b,x)=>a+(b-a)*x;
+const io=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const out=x=>1-Math.pow(1-x,3);
+const back=x=>{const c=1.70158;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const typed=(s,t,a,b)=>{const c=[...s];return c.slice(0,Math.round(c.length*seg(t,a,b))).join('')};
+const fade=(e,x,dy=24,sc)=>{e.style.opacity=x;e.style.transform=`translateY(${(1-x)*dy}px)`+(sc?` scale(${lerp(sc,1,x)})`:'')};
+/* 开头淡入、结尾淡出：t 在 [a, b] 之间可见 */
+const life=(t,a,b,d=.5)=>Math.min(out(seg(t,a,a+d)),b==null?1:1-seg(t,b-d,b));
+const P=DATA.pages,PG=id=>P.find(p=>p.id===id);
+const SRC='成品.html';
+
+/* ---------- 光标 ---------- */
+const cur=document.getElementById('cur'),rip=document.getElementById('ripple');
+/* keys: [[时间, x, y], ...]，clicks: 点击时刻 */
+function cursor(t,keys,clicks=[]){
+  if(!keys||!keys.length||t<keys[0][0]-.3||t>keys[keys.length-1][0]+1.2){cur.style.opacity=0;rip.style.opacity=0;return}
+  let x=keys[0][1],y=keys[0][2];
+  for(let i=0;i<keys.length-1;i++){const [t0,x0,y0]=keys[i],[t1,x1,y1]=keys[i+1];if(t>=t0){const k=io(seg(t,t0,t1));x=lerp(x0,x1,k);y=lerp(y0,y1,k)}}
+  cur.style.opacity=life(t,keys[0][0]-.3,keys[keys.length-1][0]+1.2,.3);
+  const c=clicks.find(c=>t>=c&&t<c+.5),down=clicks.some(c=>t>=c&&t<c+.15);
+  cur.style.transform=`translate(${x}px,${y}px) scale(${down?.85:1})`;
+  if(c!=null){const k=seg(t,c,c+.5);rip.style.opacity=1-k;rip.style.transform=`translate(${x}px,${y}px) scale(${lerp(.3,1.2,k)})`}else rip.style.opacity=0;
+}
+/* 元素中心在舞台上的坐标 */
+function at(e,dx=.5,dy=.5){const r=e.getBoundingClientRect(),s=stage.getBoundingClientRect(),k=s.width/1920;return [(r.left-s.left+r.width*dx)/k,(r.top-s.top+r.height*dy)/k]}
+
+/* ---------- 嵌入成品页 ---------- */
+function deck(pid,parent,x,y,w){
+  const k=w/1280,box=css(el('div','deck',parent),{left:x+'px',top:y+'px',width:w+'px',height:w*9/16+'px'});
+  const f=css(el('iframe','',box),{width:'1320px',height:'760px',transformOrigin:'0 0',transform:`translate(${-20*k}px,${-20*k}px) scale(${k})`});
+  f.title=PG(pid).title;
+  box.load=()=>{if(!f.src)f.src=`${SRC}?embed=1&p=${pid}`};
+  return box;
+}
+
+/* ---------- 画板界面 ---------- */
+const IC={
+  导航栏:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/>',标签栏:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15h18"/>',
+  侧边栏:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M9 5v14"/>',页脚:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 16h18"/>',
+  区块:'<rect x="3" y="5" width="18" height="14" rx="2" stroke-dasharray="3 2.4"/>',自由框:'<rect x="4" y="4" width="16" height="16" rx="3"/>',
+  标题:'<path d="M4 6v12M12 6v12M4 12h8M16 9l3-2v11"/>',正文:'<path d="M4 7h16M4 12h16M4 17h10"/>',
+  图片:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/>',视频:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/>',
+  图标:'<path d="m12 4 2.4 5 5.6.6-4.2 3.8 1.2 5.6L12 16l-5 3 1.2-5.6L4 9.6 9.6 9z"/>',头像:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="10" r="3"/><path d="M6.5 17.5c1.5-2 3.3-3 5.5-3s4 1 5.5 3"/>',
+  按钮:'<rect x="3" y="8" width="18" height="8" rx="4"/>',输入框:'<rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 10v4"/>',
+  搜索栏:'<circle cx="11" cy="11" r="6"/><path d="m20 20-4.5-4.5"/>',卡片:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 12h14M8 15h8M8 18h5"/>',
+  列表:'<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="5" cy="6" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="5" cy="18" r="1"/>',轮播图:'<rect x="6" y="5" width="12" height="14" rx="2"/><path d="M3 8v8M21 8v8"/>'
+};
+const svg=(name,extra='')=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" ${extra}>${IC[name]}</svg>`;
+const LIB=[['结构',['导航栏','标签栏','侧边栏','页脚','区块','自由框']],['内容',['标题','正文','图片','视频','图标','头像']],['组件',['按钮','输入框','搜索栏','卡片','列表','轮播图']]];
+const TILE={heading:'标题',text:'正文',button:'按钮',image:'图片',box:'自由框',search:'搜索栏',list:'列表',grid:'卡片'};
+
+function app(parent){
+  const w=el('div','app',parent),A={w};
+  const tb=el('div','glass tb',w,`<span class="tb-ic"></span><span class="tb-title"></span><span class="seg"><b class="on">设计</b><b>预览</b></span><span class="tb-sp"></span><span class="tb-zoom">66%</span><span class="tb-ai">✦ AI</span><span class="tb-play">▶ 播放</span>`);
+  A.title=tb.querySelector('.tb-title');A.ai=tb.querySelector('.tb-ai');A.seg=tb.querySelectorAll('.seg b');
+  const lib=el('div','glass lib',w,`<div class="tabs"><b class="on">组件</b><b>图层</b></div>`+LIB.map(([h,ns])=>`<h6>${h}</h6><div class="tiles">${ns.map(n=>`<div class="tile" data-n="${n}">${svg(n)}<span>${n}</span></div>`).join('')}</div>`).join(''));
+  A.tile=n=>lib.querySelector(`[data-n="${n}"]`);
+  A.cv=el('div','cv',w);
+  A.label=el('div','ab-label',A.cv);
+  A.ab=el('div','ab',A.cv);
+  A.insp=el('div','glass insp',w);
+  A.strip=el('div','glass strip',w);
+  A.mods={};
+  return A;
+}
+function pageInsp(A){
+  A.insp.innerHTML=`<label>第 1 页</label><div class="fld big" data-k="pt">封面</div><label>本页说明</label><div class="fld area" data-k="pn"></div>
+  <label>项目</label><div class="fld">演示 16:9 · 1280×720</div><label>背景</label><div class="row2"><span class="sw" data-k="bg" style="background:#0B0B12"></span><span data-k="bgt" style="color:#6e6e73">#0B0B12</span></div>
+  <label>整体说明</label><div class="fld area" data-k="notes" style="min-height:150px"></div>`;
+  A.f=k=>A.insp.querySelector(`[data-k="${k}"]`);
+}
+function modInsp(A,m){
+  A.insp.innerHTML=`<div class="mh"><i>H1</i><div><small>#${m[0]} · 标题</small><b>${esc(m[7])}</b></div></div>
+  <label>画面文字</label><div class="fld" data-k="t"></div>
+  <label>备注</label>
+  <div class="dotl" style="--d:#0A84FF">内容</div><div class="fld area" data-k="c"></div>
+  <div class="dotl" style="--d:#FF9F0A">功能</div><div class="fld area" data-k="fn"></div>
+  <div class="dotl" style="--d:#BF5AF2">效果</div><div class="fld area" data-k="e" style="min-height:90px"></div>`;
+  A.f=k=>A.insp.querySelector(`[data-k="${k}"]`);
+}
+/* 往输入框里“打字”：on=是否正在输入 */
+function fill(f,s,on){if(!f)return;const h=esc(s)+(on?'<i class="caret"></i>':'');if(f._h!==h){f.innerHTML=h;f._h=h}f.classList.toggle('on',!!on)}
+
+function modHTML(type,text){
+  switch(type){
+    case 'heading':return text?`<div class="h">${esc(text)}</div>`:`<div class="sk" style="width:70%;height:30px"></div>`;
+    case 'text':return text?`<div class="p">${esc(text)}</div>`:`<div class="sk"></div><div class="sk" style="width:80%"></div>`;
+    case 'button':return `<div class="btn">${esc(text||'按钮')}</div>`;
+    case 'image':return svg('图片');
+    case 'box':return text?`<div class="bx">${esc(text)}</div>`:'';
+    case 'search':return `<div class="srch">${svg('搜索栏','style="width:28px;height:28px;align-self:auto"')}${esc(text)}</div>`;
+    case 'list':return `<div>${'<div class="li"><i></i><s></s></div>'.repeat(6)}</div>`;
+    case 'grid':return `<div class="grid">${'<i></i>'.repeat(15)}</div>`;
+  }
+  return '';
+}
+function modEl(A,m,text){
+  const [no,type,x,y,w,h]=m;
+  let e=A.mods[no];
+  if(!e){e=A.mods[no]=el('div','m t-'+type,A.ab);css(e,{left:x+'px',top:y+'px',width:w+'px',height:h+'px'});el('b','badge',e,no);e.c=el('div','mc',e)}
+  const t=text==null?m[6]:text;
+  if(e._t!==t){e.c.innerHTML=modHTML(type,t);e._t=t}
+  return e;
+}
+function clearMods(A){A.ab.innerHTML='';A.mods={}}
+function showPage(A,i,texts=true){if(A._pg===i)return;A._pg=i;clearMods(A);P[i].mods.forEach(m=>modEl(A,m,texts?m[6]:''));A.label.innerHTML=`<b>${i+1} / ${P.length} · ${esc(P[i].title)}</b>演示 16:9 · 1280 × 720`}
+function thumbs(A,n,cur,gen=0,blank){
+  const key=n+'|'+cur+'|'+gen+'|'+blank;if(A._th===key)return;A._th=key;
+  A.strip.innerHTML=P.slice(0,n).map((p,i)=>`<div class="th${i===cur?' on':''}" style="left:${16+i*116}px"><div class="in">${blank?'':p.mods.map(m=>`<i style="left:${m[2]}px;top:${m[3]}px;width:${m[4]}px;height:${m[5]}px"></i>`).join('')}</div>${i<gen?'<em></em>':''}</div><div class="thn" style="left:${16+i*116}px">${i+1}</div>`).join('')+`<div class="addp" style="left:${16+n*116}px">+</div>`;
+}
+/* 画板窗口整体进场 */
+function appIn(A,t,a=0){const k=out(seg(t,a,a+.8));A.w.style.opacity=k;A.w.style.transform=`translateY(${(1-k)*60}px) scale(${lerp(.96,1,k)})`}
+
+/* ---------- 分镜 ---------- */
+const cover=P[0];
+const SC=[
+{d:5,name:'片头',
+ build(){const s={};
+  s.logo=css(el('div','logo',scene,`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><rect x="6" y="6" width="7" height="5" rx="1"/><rect x="6" y="13" width="12" height="5" rx="1"/><rect x="15" y="6" width="3" height="5" rx="1"/></svg>`),{left:'885px',top:'250px'});
+  s.t=css(el('div','abs center grad',scene,'网页画板'),{top:'440px',fontSize:'150px',fontWeight:800,letterSpacing:'-4px'});
+  s.s=css(el('div','abs center',scene,'画个草图，写几句备注，AI 帮你做成网页'),{top:'660px',fontSize:'40px',color:'rgba(235,235,245,.7)'});
+  s.c=css(el('div','chip',scene,'使用教程 · 约 1 分半'),{left:'50%',top:'760px',translate:'-50% 0',fontSize:'22px'});
+  return s},
+ u(t,s){const L=1-seg(t,4.4,5);
+  const k=back(seg(t,.1,.9));s.logo.style.opacity=seg(t,.1,.4)*L;s.logo.style.transform=`scale(${lerp(.5,1,k)}) rotate(${(1-k)*-12}deg)`;
+  fade(s.t,out(seg(t,.6,1.4))*L,40);fade(s.s,out(seg(t,1.2,2))*L,30);fade(s.c,out(seg(t,1.8,2.5))*L,20)}},
+
+{d:6,name:'为什么',
+ build(){const s={};
+  s.a=css(el('div','abs center',scene,'想做一个网页，或者一套演示——'),{top:'250px',fontSize:'52px',fontWeight:600});
+  s.b=css(el('div','abs center',scene,'最难的往往不是写代码，而是：'),{top:'335px',fontSize:'38px',color:'rgba(235,235,245,.6)'});
+  s.p=[['说不清想要什么样子',330,500],['改来改去好几遍',820,560],['PPT 动画死板、难分享',1210,500]].map(([x,l,tp])=>css(el('div','pain',scene,x),{left:l+'px',top:tp+'px'}));
+  s.c=css(el('div','abs center',scene,'所以：<span class="grad2">先画出来</span>，再让 AI 做出来。'),{top:'470px',fontSize:'70px',fontWeight:800});
+  return s},
+ u(t,s){const X=1-seg(t,3.6,4.1);
+  fade(s.a,out(seg(t,.1,.7))*X);fade(s.b,out(seg(t,.6,1.2))*X);
+  s.p.forEach((p,i)=>{const k=back(seg(t,1.4+i*.35,2+i*.35));p.style.opacity=seg(t,1.4+i*.35,1.7+i*.35)*X;p.style.transform=`scale(${lerp(.6,1,k)}) rotate(${[-3,2,-2][i]*k}deg)`});
+  fade(s.c,out(seg(t,4.1,4.8))*(1-seg(t,5.6,6)),30,.9)}},
+
+{d:7,name:'新建项目',cap:['1','新建项目：选尺寸，写一段整体说明'],
+ build(){const A=app(scene);pageInsp(A);thumbs(A,1,0,0,true);A.label.innerHTML='<b>1 / 1 · 封面</b>演示 16:9 · 1280 × 720';return {A}},
+ u(t,{A}){appIn(A,t);
+  const tt=typed(DATA.title,t,1.3,2.4);A.title.innerHTML=t<1.2?'未命名项目':esc(tt)+(t<2.6?'<i class="caret"></i>':'');A.title.classList.toggle('ph',t<1.2);
+  const nt=DATA.notes.slice(0,58)+'……';fill(A.f('notes'),typed(nt,t,2.8,5),t>2.7&&t<5.3);
+  fill(A.f('pn'),cover.notes,false);
+  const dk=io(seg(t,5.4,6));const c=Math.round(lerp(255,11,dk)),g=Math.round(lerp(255,11,dk)),b=Math.round(lerp(255,18,dk));
+  A.ab.style.background=`rgb(${c},${g},${b})`;A.f('bg').style.background=A.ab.style.background;A.strip.querySelector('.th').style.background=A.ab.style.background;
+  const [tx,ty]=at(A.title,.15,.5),[nx,ny]=at(A.f('notes'),.2,.4),[bx,by]=at(A.f('bg'));
+  cursor(t,[[.8,900,700],[1.1,tx,ty],[2.6,tx,ty],[2.7,nx,ny],[5.1,nx,ny],[5.3,bx,by]],[1.1,2.7,5.35])}},
+
+{d:8,name:'摆模块',cap:['2','从左边把模块拖进画布，像摆家具一样'],
+ build(){const A=app(scene);pageInsp(A);fill(A.f('notes'),DATA.notes.slice(0,58)+'……');fill(A.f('pn'),cover.notes);A.title.textContent=DATA.title;thumbs(A,1,0,0,true);A.label.innerHTML='<b>1 / 1 · 封面</b>演示 16:9 · 1280 × 720';
+  A.w.style.opacity=1;
+  /* 每个模块从对应的组件图标飞到画布位置 */
+  const fl=cover.mods.map((m,i)=>{const e=modEl(A,m,'');const tile=A.tile(TILE[m[1]]);const [sx,sy]=at(tile),[ax,ay]=at(A.ab,0,0);return {e,m,tile,from:[(sx-ax)/.66,(sy-ay)/.66],t0:.5+i*1.25}});
+  return {A,fl}},
+ u(t,{A,fl}){
+  const keys=[],clicks=[];
+  fl.forEach(({e,m,tile,from,t0},i)=>{
+    const k=io(seg(t,t0+.25,t0+1.05)),[,,x,y,w,h]=m;
+    const cx=lerp(from[0],x+w/2,k),cy=lerp(from[1],y+h/2,k),sw=lerp(Math.min(90,w),w,k),sh=lerp(Math.min(90,h),h,k);
+    css(e,{left:cx-sw/2+'px',top:cy-sh/2+'px',width:sw+'px',height:sh+'px',opacity:t<t0+.2?0:1});
+    e.classList.toggle('sel',t>t0+.2&&t<(fl[i+1]?fl[i+1].t0+.2:99));
+    tile.classList.toggle('hot',t>t0&&t<t0+1.05);
+    const [tx,ty]=at(tile),[ax,ay]=at(A.ab,0,0);
+    keys.push([t0,tx,ty],[t0+.25,tx,ty],[t0+1.05,ax+(x+w/2)*.66,ay+(y+h/2)*.66]);clicks.push(t0+.2);
+  });
+  cursor(t,keys,clicks)}},
+
+{d:9,name:'写字和备注',cap:['3','双击改字，右边写清楚「内容 · 功能 · 效果」'],
+ build(){const A=app(scene);A.title.textContent=DATA.title;thumbs(A,1,0);A.label.innerHTML='<b>1 / 1 · 封面</b>演示 16:9 · 1280 × 720';A.w.style.opacity=1;
+  cover.mods.forEach(m=>modEl(A,m,''));modInsp(A,cover.mods[0]);return {A}},
+ u(t,{A}){
+  const m1=cover.mods[0],n=m1[8],e1=A.mods[m1[0]];
+  e1.classList.toggle('sel',t>.6&&t<5.4);
+  const ht=typed(m1[6],t,1,1.8);modEl(A,m1,ht);fill(A.f('t'),ht,t>.9&&t<2);
+  fill(A.f('c'),typed(n[0],t,2.3,3.3),t>2.2&&t<3.5);
+  fill(A.f('e'),typed(n[2],t,3.6,5.2),t>3.5&&t<5.4);
+  cover.mods.slice(1).forEach((m,i)=>modEl(A,m,typed(m[6],t,5.6+i*.5,6.2+i*.5)));
+  const [ex,ey]=at(e1,.3,.5),[cx,cy]=at(A.f('c'),.3,.5),[fx,fy]=at(A.f('e'),.3,.4);
+  cursor(t,[[.3,1000,800],[.7,ex,ey],[2.1,ex,ey],[2.3,cx,cy],[3.4,cx,cy],[3.6,fx,fy]],[.7,.85,2.25,3.6])}},
+
+{d:7,name:'多页',cap:['4','点「+」加一页，一页一页设计'],
+ build(){const A=app(scene);A.title.textContent=DATA.title;pageInsp(A);fill(A.f('notes'),DATA.notes.slice(0,58)+'……');A.w.style.opacity=1;return {A}},
+ u(t,{A}){
+  const n=clamp(1+Math.floor((t-.6)/.6),1,P.length);
+  thumbs(A,n,n-1);showPage(A,n-1);
+  const pt=A.f('pt');if(pt.textContent!==P[n-1].title){pt.textContent=P[n-1].title;fill(A.f('pn'),P[n-1].notes)}
+  A.insp.querySelector('label').textContent=`第 ${n} 页`;
+  const add=A.strip.querySelector('.addp'),[x,y]=at(add);
+  cursor(t,[[.3,x,y-80],[.6,x,y],[5,x,y]],P.slice(1).map((_,i)=>.55+i*.6))}},
+
+{d:9,name:'生成网页',cap:['5','⌘K →「生成全部页面」，AI 照着线框和备注写出网页'],
+ build(){const A=app(scene);A.title.textContent=DATA.title;pageInsp(A);fill(A.f('notes'),DATA.notes.slice(0,58)+'……');fill(A.f('pn'),cover.notes);A.w.style.opacity=1;showPage(A,0);
+  const s={A};
+  s.pal=el('div','pal',A.cv,`<div class="q"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 5.4L19 9l-5.2 1.6L12 16l-1.8-5.4L5 9l5.2-1.6z"/></svg>让 AI 帮你……</div>`+[['AI 排版这一页','描述一下就行'],['规划整套大纲','一次多页'],['补写备注','选中的模块'],['生成全部页面','8 页']].map(([a,b])=>`<div class="it"><i></i>${a}<small>${b}</small></div>`).join(''));
+  s.items=s.pal.querySelectorAll('.it');
+  s.busy=el('div','busy',A.cv);
+  s.sw=el('div','sweep',A.ab,'<i></i>');
+  s.dk=deck(cover.id,A.cv,98,117,1280*.66);
+  return s},
+ u(t,s){const {A}=s;
+  const po=life(t,1.1,2.9,.25);s.pal.style.opacity=po;s.pal.style.transform=`scale(${lerp(.94,1,po)})`;
+  s.items.forEach((it,i)=>it.classList.toggle('on',i===(t<1.9?0:3)));
+  const bo=life(t,2.9,6.4,.3);s.busy.style.opacity=bo;
+  const pg=clamp(1+Math.floor(seg(t,2.9,6.2)*8),1,8),chars=Math.round(seg(t,2.9,6.2)*38000);
+  const bh=`<i></i>AI 正在生成网页 · 第 ${pg}/8 页 · 已写 ${chars.toLocaleString()} 字`;if(s.busy._h!==bh){s.busy.innerHTML=bh;s.busy._h=bh}
+  s.sw.style.opacity=life(t,2.9,5.8);s.sw.firstChild.style.left=lerp(-300,1300,(t*.7)%1)+'px';
+  if(t>5)s.dk.load();
+  s.dk.style.opacity=io(seg(t,5.8,6.6));s.dk.style.transform=`scale(${lerp(.98,1,io(seg(t,5.8,6.6)))})`;
+  thumbs(A,8,0,t<5.8?0:clamp(Math.floor((t-5.8)/.25)+1,0,8));
+  A.seg[0].classList.toggle('on',t<6.6);A.seg[1].classList.toggle('on',t>=6.6);
+  const [ax,ay]=at(A.ai),[ix,iy]=at(s.items[3],.3,.5);
+  cursor(t,[[.3,1100,600],[.9,ax,ay],[1.6,ax,ay+40],[2.3,ix,iy]],[.95,2.4])}},
+
+{d:8,name:'边看边改',cap:['6','预览里点文字直接改；选中任何元素，还能让 AI 改'],
+ build(){const s={},k=1440/1280,X=240,Y=80;s.k=k;s.X=X;s.Y=Y;
+  s.dk=deck('pwnk6882',scene,X,Y,1440);s.dk.load();
+  /* 把副标题盖住，重新“打”一遍 */
+  s.patch=css(el('div','abs',scene),{left:X+300*k+'px',top:Y+172*k+'px',width:680*k+'px',height:44*k+'px',background:'#0B0B12',textAlign:'center',fontSize:22*k+'px',lineHeight:44*k+'px',color:'rgba(235,235,245,.6)'});
+  s.box=css(el('div','abs',scene),{left:X+330*k+'px',top:Y+172*k+'px',width:620*k+'px',height:44*k+'px',border:'2px dashed #0A84FF',borderRadius:'8px'});
+  s.bar=css(el('div','abs',scene),{left:X+380*k+'px',top:Y+232*k+'px',width:520*k+'px',height:'58px',display:'flex',alignItems:'center',gap:'12px',padding:'0 10px 0 18px',borderRadius:'18px',background:'rgba(40,40,52,.82)',backdropFilter:'blur(20px)',border:'1px solid rgba(255,255,255,.14)',boxShadow:'0 14px 40px rgba(0,0,0,.4)',fontSize:'20px'});
+  s.bar.innerHTML='<span style="color:#b9a8ff">✦</span><span class="q" style="flex:1"></span><b style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#7C5CFF,#3B82F6)"></b>';
+  s.q=s.bar.querySelector('.q');
+  return s},
+ u(t,s){
+  s.dk.style.opacity=out(seg(t,0,.6));
+  const sel=t>1.2;s.box.style.opacity=sel?1:0;s.patch.style.opacity=t>1.2&&t<7.6?1:0;
+  const base='不用写代码，也不用会设计',add=typed('，十分钟做完一套。',t,1.8,3.4);
+  const ph=esc(base+add)+(t>1.2&&t<3.8?'<i class="caret"></i>':'');if(s.patch._h!==ph){s.patch.innerHTML=ph;s.patch._h=ph}
+  if(t<1.8&&s.patch._h!==ph)s.patch.innerHTML=esc(base+'。');
+  const bo=life(t,4.2,7.6,.3);s.bar.style.opacity=bo;s.bar.style.transform=`translateY(${(1-bo)*12}px)`;
+  const q=typed('这句话换成紫蓝渐变色',t,4.8,6.2);s.q.innerHTML=q?esc(q)+'<i class="caret"></i>':'<span style="color:rgba(235,235,245,.4)">告诉 AI 怎么改这里…</span>';
+  const bx=s.X+640*s.k,by=s.Y+194*s.k;
+  cursor(t,[[.4,1500,800],[1.1,bx+150,by],[4,bx+150,by],[4.4,s.X+880*s.k,s.Y+262*s.k]],[1.15,6.6])}},
+
+{d:12,name:'功能速览',cap:['','功能速览：画布编辑 · AI 助手 · 边看边改'],
+ build(){const s={};
+  s.items=[['ps5k0y9q','功能 1 · 画布编辑'],['pw80sw1j','功能 2 · AI 助手'],['p7g7tfqd','功能 3 · 边看边改']].map(([id,lab])=>({d:deck(id,scene,240,150,1440),c:css(el('div','chip g',scene,lab),{left:'240px',top:'84px'})}));
+  return s},
+ u(t,s){s.items.forEach(({d,c},i)=>{
+   const a=i*4,k=io(seg(t,a,a+.7)),x=io(seg(t,a+3.6,a+4.3));
+   if(t>a-.2)d.load();
+   const off=(1-k)*900-(i<2?x*900:0);
+   d.style.transform=`translateX(${off}px) scale(${lerp(.92,1,k)})`;d.style.opacity=k*(i<2?1-x:1-seg(t,11.5,12));
+   c.style.opacity=d.style.opacity;c.style.transform=`translateX(${off}px)`;
+ });cursor(t,[])}},
+
+{d:10,name:'两种用途',cap:['','两种用法：设计网站，或者代替 PPT 做演示'],
+ build(){const s={};
+  s.h=css(el('div','abs center',scene,'同一个工具，<span class="grad2">两种用法</span>'),{top:'120px',fontSize:'64px',fontWeight:800});
+  s.l=deck('pmtg9996',scene,100,330,840);s.r=deck('pmzetgd2',scene,980,330,840);
+  s.lc=css(el('div','chip',scene,'用途一 · 设计网站'),{left:'100px',top:'270px'});
+  s.rc=css(el('div','chip',scene,'用途二 · 代替 PPT'),{left:'980px',top:'270px'});
+  s.n=css(el('div','abs center',scene,'你现在看到的每一页，都是用网页画板做出来的。'),{top:'850px',fontSize:'30px',color:'rgba(235,235,245,.65)'});
+  return s},
+ u(t,s){const X=1-seg(t,9.4,10);
+  fade(s.h,out(seg(t,0,.7))*X,30);
+  if(t>.2)s.l.load();if(t>1.6)s.r.load();
+  fade(s.l,out(seg(t,.3,1.1))*X,60);fade(s.lc,out(seg(t,.3,1.1))*X,40);
+  fade(s.r,out(seg(t,1.7,2.5))*X,60);fade(s.rc,out(seg(t,1.7,2.5))*X,40);
+  fade(s.n,out(seg(t,6,6.8))*X,20)}},
+
+{d:8,name:'播放',cap:['7','点「播放」全屏演示：← → 翻页，F 全屏，发个链接就能看'],
+ build(){const s={};
+  s.h=css(el('div','abs center',scene,'8 页，全部出自<span class="grad2">网页画板</span>'),{top:'110px',fontSize:'60px',fontWeight:800});
+  s.d=P.map((p,i)=>deck(p.id,scene,84+(i%4)*444,250+Math.floor(i/4)*270,420));
+  return s},
+ u(t,s){const X=1-seg(t,7.4,8);
+  fade(s.h,out(seg(t,0,.7))*X,30);
+  s.d.forEach((d,i)=>{const a=.3+i*.18;if(t>a-.1)d.load();const k=back(seg(t,a,a+.6));d.style.opacity=seg(t,a,a+.3)*X;d.style.transform=`scale(${lerp(.6,1,k)})`})}},
+
+{d:7,name:'片尾',
+ build(){const s={};
+  s.t=css(el('div','abs center grad',scene,'现在就试试'),{top:'170px',fontSize:'120px',fontWeight:800,letterSpacing:'-3px'});
+  s.term=css(el('div','term',scene,'<div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div><pre></pre>'),{left:'560px',top:'400px',width:'800px',height:'250px'});
+  s.pre=s.term.querySelector('pre');
+  const row=css(el('div','chips',scene),{top:'730px'});
+  s.chips=['MIT 开源','本地运行，不用装依赖','接入 DeepSeek · Kimi · 通义 · OpenAI · Ollama'].map(c=>el('div','chip',row,c));
+  return s},
+ u(t,s){
+  fade(s.t,out(seg(t,0,.8)),40);fade(s.term,out(seg(t,.4,1.1)),40);
+  const l1=typed('python3 server.py',t,1.2,2.2),l2=typed('# 打开 http://localhost:5178',t,2.4,3.6);
+  const h=`<span style="color:#a996ff">$ </span>${esc(l1)}${t>1.1&&t<2.4?'<i class="caret"></i>':''}<br><span style="color:rgba(235,235,245,.45)">${esc(l2)}${t>2.4?'<i class="caret"></i>':''}</span>`;
+  if(s.pre._h!==h){s.pre.innerHTML=h;s.pre._h=h}
+  s.chips.forEach((c,i)=>fade(c,out(seg(t,3.8+i*.25,4.4+i*.25)),20))}}
+];
+
+/* ---------- 时间轴 ---------- */
+const starts=[];let TOT=0;SC.forEach(s=>{starts.push(TOT);TOT+=s.d});
+let T=0,playing=true,ci=-1,st=null,last=performance.now();
+const capEl=document.getElementById('cap'),capB=capEl.querySelector('b'),capS=capEl.querySelector('span');
+const q=new URLSearchParams(location.search);
+if(q.has('clean'))document.body.classList.add('clean');
+if(q.has('t'))T=clamp(+q.get('t')||0,0,TOT-.01);
+function sceneAt(x){for(let i=SC.length-1;i>=0;i--)if(x>=starts[i])return i;return 0}
+function render(){
+  const i=sceneAt(T);
+  if(i!==ci){ci=i;scene.innerHTML='';cur.style.opacity=0;rip.style.opacity=0;st=SC[i].build()||{};updChap()}
+  const t=T-starts[i],s=SC[i];
+  s.u(t,st);
+  /* 字幕 */
+  if(s.cap){capB.textContent=s.cap[0];capB.style.display=s.cap[0]?'':'none';capS.textContent=s.cap[1];const k=life(t,.3,s.d-.1,.4);capEl.style.opacity=k;capEl.style.transform=`translate(-50%,${(1-k)*20}px)`}else capEl.style.opacity=0;
+  /* 背景光斑缓慢移动 */
+  css(document.getElementById('bgA'),{left:300+Math.sin(T*.25)*240+'px',top:-500+Math.cos(T*.2)*160+'px'});
+  css(document.getElementById('bgB'),{left:700+Math.cos(T*.18)*300+'px',top:200+Math.sin(T*.22)*180+'px'});
+  /* 控制条 */
+  document.querySelector('#prog .fl').style.width=T/TOT*100+'%';
+  document.getElementById('time').textContent=fmt(T)+' / '+fmt(TOT);
+}
+const fmt=x=>Math.floor(x/60)+':'+String(Math.floor(x%60)).padStart(2,'0');
+function updChap(){document.getElementById('chap').textContent=`${ci+1}/${SC.length} · ${SC[ci].name}`}
+function loop(now){
+  const dt=Math.min(.1,(now-last)/1000);last=now;
+  if(playing){T+=dt;if(T>=TOT){T=TOT-.001;setPlay(false);document.getElementById('over').classList.add('on')}}
+  render();requestAnimationFrame(loop);
+}
+function setPlay(v){playing=v;document.getElementById('pp').textContent=v?'❚❚':'▶';stage.querySelectorAll('*').forEach(e=>e.style.animationPlayState=v?'':'paused')}
+function seek(x){T=clamp(x,0,TOT-.01);ci=-1;document.getElementById('over').classList.remove('on')}
+function fit(){document.documentElement.style.setProperty('--k',Math.min(innerWidth/1920,innerHeight/1080))}
+addEventListener('resize',fit);fit();
+
+/* 进度条：章节刻度、点击跳转 */
+const prog=document.getElementById('prog'),tip=prog.querySelector('.tip');
+starts.forEach((s,i)=>{if(i)css(el('i','tk',prog),{left:s/TOT*100+'%'})});
+prog.addEventListener('click',e=>{const r=prog.getBoundingClientRect();seek((e.clientX-r.left)/r.width*TOT)});
+prog.addEventListener('mousemove',e=>{const r=prog.getBoundingClientRect(),x=(e.clientX-r.left)/r.width;tip.style.left=x*100+'%';tip.textContent=SC[sceneAt(x*TOT)].name+' · '+fmt(x*TOT)});
+document.getElementById('pp').onclick=()=>setPlay(!playing);
+document.querySelector('#over button').onclick=()=>{seek(0);setPlay(true)};
+addEventListener('keydown',e=>{
+  if(e.key===' '){e.preventDefault();setPlay(!playing)}
+  else if(e.key==='ArrowRight')seek(starts[Math.min(ci+1,SC.length-1)]);
+  else if(e.key==='ArrowLeft')seek(T-starts[ci]>1?starts[ci]:starts[Math.max(ci-1,0)]);
+  else if(e.key==='f'||e.key==='F')document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
+});
+stage.addEventListener('click',()=>setPlay(!playing));
+let idle;addEventListener('mousemove',()=>{document.body.classList.remove('idle');clearTimeout(idle);idle=setTimeout(()=>playing&&document.body.classList.add('idle'),2200)});
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
