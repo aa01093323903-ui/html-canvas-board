@@ -77,6 +77,25 @@ def upstream(c, path, payload=None):
     return urllib.request.urlopen(req, timeout=300)
 
 
+def adapt(payload, detail):
+    """有些模型不认某些参数（比如思考型模型不收 temperature、新模型要 max_completion_tokens），按报错调整后重试。"""
+    d = detail.lower()
+    if "max_completion_tokens" in d and "max_tokens" in payload:
+        payload["max_completion_tokens"] = payload.pop("max_tokens")
+        return True
+    for k in ("max_tokens", "max_completion_tokens"):
+        if k in d and k in payload:  # 超过模型上限：用报错里给的上限
+            nums = [int(n) for n in re.findall(r"\d{3,6}", detail) if int(n) < payload[k]]
+            if nums:
+                payload[k] = max(nums)
+                return True
+    for k in ("temperature", "response_format"):
+        if k in d and k in payload:
+            payload.pop(k)
+            return True
+    return False
+
+
 class Handler(BaseHTTPRequestHandler):
     def _send(self, code, body, ctype="application/json; charset=utf-8"):
         data = body if isinstance(body, bytes) else body.encode("utf-8")
@@ -151,6 +170,8 @@ class Handler(BaseHTTPRequestHandler):
             for k in ("baseUrl", "model"):
                 if isinstance(body.get(k), str) and body[k].strip():
                     c[k] = body[k].strip()
+            # 粘贴了完整接口地址时，去掉末尾的 /chat/completions 或 /models
+            c["baseUrl"] = re.sub(r"/(chat/completions|models)/?$", "", c["baseUrl"].rstrip("/"))
             if isinstance(body.get("apiKey"), str) and body["apiKey"].strip():
                 c["apiKey"] = body["apiKey"].strip()
             write_file(CONFIG, json.dumps(c, ensure_ascii=False, indent=2))
@@ -197,10 +218,18 @@ class Handler(BaseHTTPRequestHandler):
                 payload[k] = body[k]
         if body.get("json"):
             payload["response_format"] = {"type": "json_object"}
-        try:
-            r = upstream(c, "/chat/completions", payload)
-        except Exception as e:  # noqa: BLE001
-            return self._upstream_error(e)
+        for _ in range(4):
+            try:
+                r = upstream(c, "/chat/completions", payload)
+                break
+            except urllib.error.HTTPError as e:
+                detail = e.read().decode("utf-8", "replace")
+                if e.code not in (400, 422) or not adapt(payload, detail):
+                    return self._json({"error": f"模型接口返回 {e.code}：{detail[:500]}"}, 502)
+            except Exception as e:  # noqa: BLE001
+                return self._upstream_error(e)
+        else:
+            return self._json({"error": "模型接口一直拒绝请求参数"}, 502)
         with r:
             if not payload["stream"]:
                 return self._send(200, r.read())

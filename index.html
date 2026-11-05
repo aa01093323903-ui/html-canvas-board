@@ -1170,22 +1170,41 @@ function toast(s,ms=2400){const t=$('#toast');t.textContent=s;t.classList.add('s
 let cfg={hasKey:false,model:'',baseUrl:''},aiCtl=null;
 async function loadCfg(){try{cfg=await (await fetch('/api/config')).json()}catch{}}
 function needAI(){if(cfg.hasKey)return true;toast('先接入一个模型（比如 DeepSeek）');openSettings();return false}
-async function ai({messages,json=false,stream=false,max_tokens,onDelta}){
+async function aiOnce({messages,json=false,stream=false,max_tokens,onDelta}){
   aiCtl=new AbortController();
   const r=await fetch('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},signal:aiCtl.signal,body:JSON.stringify({messages,json,stream,max_tokens,temperature:json?.7:.8})});
   if(!r.ok){let msg='HTTP '+r.status;try{msg=(await r.json()).error||msg}catch{}throw new Error(msg)}
-  if(!stream){const j=await r.json();return j.choices?.[0]?.message?.content||''}
-  const rd=r.body.getReader(),dec=new TextDecoder();let buf='',out='';
+  if(!stream){
+    const j=await r.json();if(j.error)throw new Error(j.error.message||String(j.error));
+    const c=j.choices?.[0]||{};return {text:c.message?.content||'',finish:c.finish_reason,model:j.model};
+  }
+  const rd=r.body.getReader(),dec=new TextDecoder();let buf='',out='',finish=null,model='';
   for(;;){
     const {done,value}=await rd.read();if(done)break;
     buf+=dec.decode(value,{stream:true});let i;
     while((i=buf.indexOf('\n'))>=0){
       const line=buf.slice(0,i).trim();buf=buf.slice(i+1);
       if(!line.startsWith('data:'))continue;const d=line.slice(5).trim();if(d==='[DONE]')continue;
-      try{const c=JSON.parse(d).choices?.[0]?.delta?.content;if(c){out+=c;onDelta&&onDelta(out)}}catch{}
+      try{
+        const j=JSON.parse(d),ch=j.choices?.[0];model=j.model||model;if(!ch)continue;
+        if(ch.finish_reason)finish=ch.finish_reason;
+        const c=ch.delta?.content;
+        if(c){out+=c;onDelta&&onDelta(out)}
+        else if(!out&&ch.delta?.reasoning_content)busyText('模型正在思考…');
+      }catch{}
     }
   }
-  return out;
+  return {text:out,finish,model};
+}
+// 思考型模型（如 deepseek-v4-pro）会先花掉一部分字数思考；被截断时放宽上限再试一次
+async function ai(o){
+  let mt=o.max_tokens;
+  for(let k=0;;k++){
+    const r=await aiOnce({...o,max_tokens:mt});
+    if(r.finish!=='length')return r.text;
+    if(k||!mt)throw new Error(r.text?'回复太长被截断了，可以把要求拆小一点再试':'模型一直在思考，没来得及回答，可以换一个非思考模型试试');
+    mt=Math.min(mt*4,64000);busyText('回复被截断，放宽长度重试…');
+  }
 }
 function parseJSON(s){
   s=s.trim().replace(/^```(?:json)?\s*/i,'').replace(/```\s*$/,'');
@@ -1389,12 +1408,21 @@ async function openSettings(){
     <div class="presets">${PRESETS.map((p,i)=>`<button class="chip${cfg.baseUrl===p[1]?' on':''}" data-i="${i}">${p[0]}</button>`).join('')}</div>
     <label class="lab">接口地址</label><input class="fld" id="s-url" value="${esc(cfg.baseUrl)}" spellcheck="false">
     <label class="lab">API Key</label><input class="fld" id="s-key" type="password" placeholder="${cfg.hasKey?'已保存（尾号 '+esc(cfg.keyTail||'····')+'），不改就留空':'粘贴你的 API Key'}" autocomplete="off" spellcheck="false">
-    <label class="lab">模型</label><div style="display:flex;gap:6px"><input class="fld" id="s-model" value="${esc(cfg.model)}" list="s-models" spellcheck="false"><datalist id="s-models"></datalist><button class="gbtn" style="width:auto;padding:0 12px;white-space:nowrap" id="s-list">获取列表</button></div>
+    <label class="lab">模型</label><div style="display:flex;gap:6px"><input class="fld" id="s-model" value="${esc(cfg.model)}" spellcheck="false" autocomplete="off"><button class="gbtn" style="width:auto;padding:0 12px;white-space:nowrap" id="s-list">获取列表</button></div>
+    <div class="presets" id="s-models" style="max-height:112px;overflow:auto;margin:8px 0 0"></div>
     <div class="hint2">Key 只保存在你电脑上的 画板/config.json，由本地服务转发请求，不会进入浏览器、board.json 或 Git 仓库。</div>
     <div class="sbtns"><span id="s-msg" style="margin-right:auto;font-size:12px;color:var(--text2);align-self:center"></span><button class="gbtn" id="s-test">测试连接</button><button class="pbtn" id="s-save">保存</button></div>`);
   const msg=t=>{s.querySelector('#s-msg').textContent=t};
+  const mi=s.querySelector('#s-model');let models=null;
+  const drawModels=()=>{
+    if(!models)return;const v=mi.value.trim();
+    s.querySelector('#s-models').innerHTML=models.map(m=>`<button class="chip${m===v?' on':''}" data-m="${esc(m)}">${esc(m)}</button>`).join('');
+    s.querySelectorAll('[data-m]').forEach(c=>c.onclick=()=>{mi.value=c.dataset.m;drawModels();msg('')});
+  };
+  const checkModel=()=>{const v=mi.value.trim();if(models&&!models.includes(v)){msg(`列表里没有“${v}”，点下面的模型名选一个`);return false}return true};
+  mi.addEventListener('input',drawModels);
   s.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
-    const p=PRESETS[c.dataset.i];s.querySelector('#s-url').value=p[1];s.querySelector('#s-model').value=p[2];
+    const p=PRESETS[c.dataset.i];s.querySelector('#s-url').value=p[1];s.querySelector('#s-model').value=p[2];models=null;s.querySelector('#s-models').innerHTML='';
     s.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===c));msg(p[2]?'':'点“获取列表”选一个模型');
   });
   const saveCfg=async()=>{
@@ -1405,14 +1433,17 @@ async function openSettings(){
   s.querySelector('#s-list').onclick=async()=>{
     msg('获取中…');await saveCfg();
     try{const j=await (await fetch('/api/models')).json();if(j.error)throw new Error(j.error);
-      s.querySelector('#s-models').innerHTML=j.models.map(m=>`<option value="${esc(m)}">`).join('');
-      msg(`找到 ${j.models.length} 个模型，点模型框选择`);s.querySelector('#s-model').focus();
+      models=j.models.filter(Boolean).sort();drawModels();
+      if(!models.includes(mi.value.trim()))msg(`找到 ${models.length} 个模型，点一个选上`);else msg(`找到 ${models.length} 个模型，当前选的是 ${mi.value.trim()}`);
     }catch(e){msg('获取失败：'+e.message.slice(0,60))}
   };
   s.querySelector('#s-test').onclick=async()=>{
+    if(!checkModel())return;
     msg('测试中…');await saveCfg();
-    try{const r=await ai({messages:[{role:'user',content:'只回复两个字：好的'}],max_tokens:10});msg('连接成功 ✓ 模型回复：'+r.slice(0,20))}
-    catch(e){msg('失败：'+e.message.slice(0,80))}
+    try{
+      const r=await aiOnce({messages:[{role:'user',content:'只回复两个字：好的'}],max_tokens:300});
+      msg(`连接成功 ✓ ${r.model||mi.value.trim()} `+(r.text?'回复：'+r.text.trim().slice(0,20):'（思考型模型，还在思考就到了测试的字数上限，正常）'));
+    }catch(e){msg('失败：'+e.message.slice(0,80))}
   };
   s.querySelector('#s-save').onclick=async()=>{await saveCfg();closeSheets();toast(cfg.hasKey?`已接入 ${cfg.model}`:'已保存，但还没有填 API Key')};
 }
