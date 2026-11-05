@@ -186,6 +186,7 @@ const fade=(e,x,dy=24,sc)=>{e.style.opacity=x;e.style.transform=`translateY(${(1
 /* 开头淡入、结尾淡出：t 在 [a, b] 之间可见 */
 const life=(t,a,b,d=.5)=>Math.min(out(seg(t,a,a+d)),b==null?1:1-seg(t,b-d,b));
 const P=DATA.pages,PG=id=>P.find(p=>p.id===id);
+const FR=new Set(); /* 当前这一幕已加载的成品页 iframe */
 const SRC='成品.html';
 
 /* ---------- 光标 ---------- */
@@ -208,7 +209,7 @@ function deck(pid,parent,x,y,w){
   const k=w/1280,box=css(el('div','deck',parent),{left:x+'px',top:y+'px',width:w+'px',height:w*9/16+'px'});
   const f=css(el('iframe','',box),{width:'1320px',height:'760px',transformOrigin:'0 0',transform:`translate(${-20*k}px,${-20*k}px) scale(${k})`});
   f.title=PG(pid).title;
-  box.load=()=>{if(!f.src)f.src=`${SRC}?embed=1&p=${pid}`};
+  box.load=()=>{if(!f.src){f._t0=T;f._ready=new Promise(r=>f.addEventListener('load',r,{once:true}));f.src=`${SRC}?embed=1&p=${pid}`;FR.add(f)}};
   return box;
 }
 
@@ -475,7 +476,7 @@ if(q.has('t'))T=clamp(+q.get('t')||0,0,TOT-.01);
 function sceneAt(x){for(let i=SC.length-1;i>=0;i--)if(x>=starts[i])return i;return 0}
 function render(){
   const i=sceneAt(T);
-  if(i!==ci){ci=i;scene.innerHTML='';cur.style.opacity=0;rip.style.opacity=0;st=SC[i].build()||{};updChap()}
+  if(i!==ci){ci=i;scene.innerHTML='';FR.clear();cur.style.opacity=0;rip.style.opacity=0;st=SC[i].build()||{};updChap()}
   const t=T-starts[i],s=SC[i];
   s.u(t,st);
   /* 字幕 */
@@ -514,7 +515,21 @@ addEventListener('keydown',e=>{
 });
 stage.addEventListener('click',()=>setPlay(!playing));
 let idle;addEventListener('mousemove',()=>{document.body.classList.remove('idle');clearTimeout(idle);idle=setTimeout(()=>playing&&document.body.classList.add('idle'),2200)});
-requestAnimationFrame(loop);
+/* 逐帧渲染模式（?render=1）：外部录制程序调用 renderFrame(秒)，每一帧的画面只由时间决定 */
+if(q.has('render')){
+  document.body.classList.add('clean');playing=false;
+  window.renderFrame=async x=>{
+    T=x;render();
+    const fs=[...FR];
+    await Promise.race([Promise.all(fs.map(f=>f._ready)),new Promise(r=>setTimeout(r,8000))]);
+    render();
+    document.getAnimations().forEach(a=>{a.pause();a.currentTime=T*1000});
+    fs.forEach(f=>{const d=f.contentDocument;if(d)d.getAnimations().forEach(a=>{a.pause();a.currentTime=Math.max(0,(T-f._t0)*1000)})});
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    return ci;
+  };
+  window.TOTAL=TOT;
+}else requestAnimationFrame(loop);
 </script>
 </body>
 </html>

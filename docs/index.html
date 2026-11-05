@@ -17,6 +17,10 @@ a.card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.24)}
 a.card.main{border:1.5px solid transparent;background:linear-gradient(#15141f,#15141f) padding-box,linear-gradient(135deg,#7C5CFF,#3B82F6) border-box}
 .card b{display:block;font-size:21px;margin-bottom:8px}
 .card span{font-size:15px;line-height:1.6;color:rgba(235,235,245,.6)}
+.video{margin-top:56px}
+.video h2{margin:0 0 6px;font-size:clamp(24px,3.6vw,34px);font-weight:700}
+.video p{margin:0 0 18px;font-size:15px;color:rgba(235,235,245,.55)}
+.video video{display:block;width:100%;aspect-ratio:16/9;border-radius:18px;background:#000;box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.1)}
 .foot{margin-top:36px;font-size:14px;color:rgba(235,235,245,.45)}
 .foot a{color:rgba(235,235,245,.8)}
 </style>
@@ -30,6 +34,11 @@ a.card.main{border:1.5px solid transparent;background:linear-gradient(#15141f,#1
     <a class="card" href="tutorial/成品.html"><b>8 页演示稿</b><span>用网页画板做出来的成品，← → 翻页，F 全屏</span></a>
     <a class="card" href="https://github.com/aa01093323903-ui/html-canvas-board/blob/main/docs/tutorial/%E8%BF%87%E7%A8%8B%E8%AE%B0%E5%BD%95.md"><b>过程记录</b><span>每一步怎么摆模块、怎么写备注</span></a>
   </div>
+  <section class="video" id="video">
+    <h2>1 分半看懂网页画板</h2>
+    <p>从新建项目、摆模块、写备注，到 AI 生成网页、全屏播放，完整走一遍。</p>
+    <video src="tutorial/教程视频.mp4" poster="tutorial/教程视频-封面.jpg" controls playsinline preload="metadata"></video>
+  </section>
   <p class="foot">源码和使用说明：<a href="https://github.com/aa01093323903-ui/html-canvas-board">github.com/aa01093323903-ui/html-canvas-board</a> · MIT 开源</p>
 </main>
 </body>

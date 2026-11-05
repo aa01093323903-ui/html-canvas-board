@@ -7,3 +7,6 @@ output/
 *.tmp
 .DS_Store
 __pycache__/
+
+# 本地的高清视频（太大，不提交）
+/教程视频-1080p.mp4
