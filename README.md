@@ -43,6 +43,14 @@ https://github.com/user-attachments/assets/5810f8eb-5467-499a-b6ed-eb16cb7a84c4
 - 预览里**点文字直接改**，自动写回源码
 - **选中任意元素，用一句话让 AI 改**，或者整页修改，都可以撤销
 
+**导入做好的 HTML，接着改**
+- 把已经做好的 `.html` 拖进窗口（或点工具栏的导入按钮、`⌘K` →“导入 HTML”），它会变成画板里的一页
+- 网页用到的图片、CSS、JS 可以一起拖进来；漏了的图片之后单独拖进来就能补上
+- 原来的样式会自动加上页面前缀，不会影响其他页；`100vh`、按宽度的 `@media` 都按页面本身的尺寸计算
+- 自动识别导航、标题、正文、按钮、图片、卡片等结构，在画布上生成对应的线框
+- 导入后和 AI 生成的页面一样：点文字直接改、选中元素让 AI 改、全屏播放
+- 画板导出的整套页面（`output/index.html`）也能导回来，每一页还原成一页
+
 **播放**
 - 一键从当前页开始播放，点击、空格、方向键翻页，按 F 全屏
 - 退出播放后，自动停在你刚才看的那一页，方便接着设计
@@ -93,7 +101,8 @@ index.html          画板（单文件，没有构建步骤）
 server.py           本地服务：保存数据、转发模型请求（只用 Python 标准库）
 board.json          你的画板数据（自动生成，已忽略提交）
 config.json         模型设置和 API Key（自动生成，已忽略提交）
-output/parts/       每一页生成的 HTML 源码
+output/parts/       每一页生成或导入的 HTML 源码
+output/assets/      导入网页时一起上传的图片、字体等
 output/index.html   拼好的整套页面，可以直接播放或发给别人
 ```
 
@@ -102,6 +111,7 @@ output/index.html   拼好的整套页面，可以直接播放或发给别人
 | 操作 | 快捷键 |
 |---|---|
 | AI 助手 | `⌘K` |
+| 导入 HTML | 把文件拖进窗口 |
 | 从当前页播放 | `⌘↩` |
 | 切换页面 | `PageUp` / `PageDown` |
 | 撤销 / 重做 | `⌘Z` / `⇧⌘Z` |
@@ -125,6 +135,6 @@ output/index.html   拼好的整套页面，可以直接播放或发给别人
 
 ### English
 
-**HTML Sketchboard** is a zero-dependency, local-first wireframe canvas for telling AI what you want. You lay out preset modules (nav bar, hero, cards, buttons…) and annotate each one with *content / function / effect* notes. From there, either plug in any OpenAI-compatible model (DeepSeek, Kimi, Qwen, OpenAI, Ollama) to generate the page, edit text in place, or select an element and describe a change in one sentence; or let a coding agent such as Claude Code or Cursor read the auto-saved `board.json` and build it. It supports multiple pages and a click-to-advance player, so it also works as an HTML replacement for slide decks.
+**HTML Sketchboard** is a zero-dependency, local-first wireframe canvas for telling AI what you want. You lay out preset modules (nav bar, hero, cards, buttons…) and annotate each one with *content / function / effect* notes. From there, either plug in any OpenAI-compatible model (DeepSeek, Kimi, Qwen, OpenAI, Ollama) to generate the page, edit text in place, or select an element and describe a change in one sentence; or let a coding agent such as Claude Code or Cursor read the auto-saved `board.json` and build it. It supports multiple pages and a click-to-advance player, so it also works as an HTML replacement for slide decks. You can also drop an existing `.html` file (plus its images and CSS) onto the window to import it as a page and keep editing it: its CSS is scoped automatically, and a wireframe is generated from its structure.
 
 Run `python3 server.py` and open <http://localhost:5178>.

@@ -262,6 +262,7 @@ body.preview #pv{display:block}
 .sheet h3 small{font-weight:400;font-size:12px;color:var(--text3);margin-left:auto}
 .sheet textarea.fld{min-height:64px;font-size:14px;padding:10px 12px}
 .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.act.span2{grid-column:1/-1}
 .act{border:0;border-radius:10px;padding:9px 12px;text-align:left;background:var(--field);cursor:default;transition:background .15s,transform .2s var(--bounce)}
 .act:hover{background:var(--hover)} .act:active{transform:scale(.98)}
 .act b{display:block;font-size:13px;font-weight:600} .act span{font-size:11.5px;color:var(--text2)}
@@ -282,6 +283,10 @@ body.preview #pv{display:block}
 @keyframes sp{to{transform:rotate(360deg)}}
 
 /* 播放 */
+#dropzone{position:fixed;inset:10px;z-index:300;display:none;place-items:center;border-radius:18px;border:2px dashed var(--accent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+body.dropping #dropzone{display:grid}
+#dropzone .glass{pointer-events:none;padding:18px 26px;border-radius:16px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:13px;color:var(--text2)}
+#dropzone b{font-size:17px;color:var(--text)}
 #player{position:fixed;inset:0;z-index:200;background:#000;display:none;opacity:0;transition:opacity .35s}
 #player.on{display:block} #player.show{opacity:1}
 #player iframe{width:100%;height:100%;border:0;display:block}
@@ -316,6 +321,7 @@ body.preview #pv{display:block}
 </div>
 <div id="pv"><iframe id="pvframe" title="预览"></iframe><div id="pvempty"><div class="glass"><span>这一页还没生成网页，现在显示的是线框</span><button class="pbtn" style="width:auto;padding:6px 14px" id="pv-gen1">✨ 生成本页</button></div></div></div>
 <div id="fbar" class="glass"></div>
+<div id="dropzone"><div class="glass"><b>松开导入</b><span>.html 网页可以和它用到的图片、CSS 一起拖进来</span></div></div>
 <div id="marquee"></div>
 
 <header id="toolbar" class="glass">
@@ -332,6 +338,7 @@ body.preview #pv{display:block}
     <button id="zoomlbl" title="适合窗口 ⌘0">100%</button>
     <button class="ib wide" id="b-zin" title="放大 ⌘+"></button>
     <span class="vsep"></span>
+    <button class="ib" id="b-import" title="导入做好的 HTML（也可以直接拖进窗口）"></button>
     <button class="tbtn ai" id="b-ai" title="AI 助手 ⌘K"></button>
     <button class="tbtn" id="b-play" title="从本页开始播放 ⌘↩"></button>
     <div id="status"><i></i><span>已保存</span></div>
@@ -398,6 +405,7 @@ const P={
   'dist-h':'<path d="M4 3v18M20 3v18"/><rect x="10" y="7" width="4" height="10" rx="1"/>',
   'dist-v':'<path d="M3 4h18M3 20h18"/><rect x="7" y="10" width="10" height="4" rx="1"/>',
   drop:'<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
+  upload:'<path d="M12 16V5M7 10l5-5 5 5M5 20h14"/>',
   sparkle:'<path d="M11 3l1.9 5.1L18 10l-5.1 1.9L11 17l-1.9-5.1L4 10l5.1-1.9z"/><path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/>',
   play:'<path d="M7.5 5v14l11-7z"/>',
   gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/>',
@@ -518,7 +526,7 @@ function renderCanvas(){
   const hint=$('#hint');
   hint.style.width=P.width+'px';hint.style.height=Math.min(p.height,700)+'px';
   hint.style.opacity=mods().length?0:1;
-  if(!hint.innerHTML)hint.innerHTML=`${ic('drop')}<div>从左侧拖入组件，或单击添加<br>也可以按 ⌘K 让 AI 帮你排版</div>`;
+  if(!hint.innerHTML)hint.innerHTML=`${ic('drop')}<div>从左侧拖入组件，或单击添加<br>也可以按 ⌘K 让 AI 帮你排版<br>已经有做好的网页？把 .html 拖进来接着改</div>`;
   const hh=$('#hhandle');hh.style.left=P.width/2+'px';hh.style.top=p.height+'px';hh.style.display=P.device==='slide'?'none':'';
   const seen=new Set();
   mods().forEach((m,i)=>{
@@ -638,6 +646,7 @@ function pageInsp(){
     <li><b>双击</b>标题、正文、按钮，直接改文字</li>
     <li><kbd>⌘K</kbd> 让 AI 排版、写备注、生成网页</li>
     <li><kbd>⌘↩</kbd> 从当前页开始播放</li>
+    <li>把做好的 <b>.html</b> 拖进窗口，导入后接着改</li>
     <li><kbd>⌥</kbd> 拖动复制 · 按住 <kbd>⌘</kbd> 拖动不吸附</li>
     <li><kbd>PageUp</kbd> <kbd>PageDown</kbd> 切换页面</li>
     <li>双指平移画布，捏合缩放 · <kbd>⌘0</kbd> 适合窗口</li>
@@ -1101,9 +1110,9 @@ ST.addEventListener('click',e=>{
 });
 ST.addEventListener('contextmenu',e=>{
   e.preventDefault();const t=e.target.closest('.pthumb');
-  if(!t){showMenu(e.clientX,e.clientY,[['新建页面','',()=>addPage(doc.pages.length)]]);return}
+  if(!t){showMenu(e.clientX,e.clientY,[['新建页面','',()=>addPage(doc.pages.length)],['导入 HTML…','',openImport]]);return}
   const i=+t.dataset.i;goPage(i);
-  showMenu(e.clientX,e.clientY,[['在后面新建页面','',()=>addPage(i+1)],['复制这一页','',()=>dupPage(i)],'-',
+  showMenu(e.clientX,e.clientY,[['在后面新建页面','',()=>addPage(i+1)],['复制这一页','',()=>dupPage(i)],['在后面导入 HTML…','',openImport],'-',
     ['从这一页播放','⌘↩',play],['用 AI 生成这一页网页','',()=>genPages([i])],'-',['删除这一页','',()=>delPage(i),doc.pages.length<2,true]]);
 });
 ST.addEventListener('dragstart',e=>{const t=e.target.closest('.pthumb');if(!t)return;dragFrom=+t.dataset.i;e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain','')});
@@ -1140,13 +1149,13 @@ $('#tg-lib').innerHTML=ic('sideL');$('#tg-insp').innerHTML=ic('sideR');
 $('#b-undo').innerHTML=ic('undo');$('#b-redo').innerHTML=ic('redo');
 $('#b-zin').innerHTML=ic('plus');$('#b-zout').innerHTML=ic('minus');
 $('#b-ai').innerHTML=ic('sparkle')+'<span>AI</span>';$('#b-play').innerHTML=ic('play')+'<span>播放</span>';
-$('#b-set').innerHTML=ic('gear');
+$('#b-set').innerHTML=ic('gear');$('#b-import').innerHTML=ic('upload');
 $('#tg-lib').onclick=()=>{document.body.classList.toggle('no-lib');setTimeout(layoutPreview,520)};
 $('#tg-insp').onclick=()=>{document.body.classList.toggle('no-insp');setTimeout(layoutPreview,520)};
 $('#b-undo').onclick=undo;$('#b-redo').onclick=redo;
 $('#b-zin').onclick=()=>zoomBy(1.25);$('#b-zout').onclick=()=>zoomBy(.8);
 $('#zoomlbl').onclick=()=>fitView();
-$('#b-ai').onclick=()=>openPalette();$('#b-play').onclick=()=>play();$('#b-set').onclick=()=>openSettings();
+$('#b-ai').onclick=()=>openPalette();$('#b-import').onclick=()=>openImport();$('#b-play').onclick=()=>play();$('#b-set').onclick=()=>openSettings();
 {
   const t=$('#ptitle');let pending=null;
   t.addEventListener('focus',()=>{pending=snapshot()});
@@ -1345,20 +1354,22 @@ function openPalette(){
   const pv=mode==='preview',has=!!parts[pg().id];
   const acts=pv?[
     ['edit','修改这一页','按你的描述改当前网页',!has,true],['regen','重新生成这一页','按线框和备注重新做'],
-    ['genall','生成全部页面','把每一页都做成网页'],['design','回到设计','调整布局后再生成']
+    ['genall','生成全部页面','把每一页都做成网页'],['design','回到设计','调整布局后再生成'],['import','导入 HTML','上传做好的网页，导入后接着改',false,false,true]
   ]:[
     ['layout','排版这一页','按描述生成当前页的布局',false,true],['outline','规划整套页面','一句话生成多页大纲和布局'],
     ['gen','生成这一页网页','把当前页做成真正的网页'],['genall','生成全部页面','把每一页都做成网页'],
+    ['import','导入 HTML','上传做好的网页，导入后接着改',false,false,true],
   ];
   const s=sheet(`<h3>${ic('sparkle')}AI 助手<small>${cfg.hasKey?esc(cfg.model):'未接入模型'}</small></h3>
     ${cfg.hasKey?'':`<div class="warn"><span>还没有接入模型，接入后才能用 AI</span><button class="pbtn" style="width:auto;padding:5px 12px" id="pal-set">去接入</button></div>`}
     <textarea class="fld" id="pal-in" rows="2" placeholder="${pv?'例如：标题再大一点，整体换成暖色调':'例如：做一个 6 页的新品发布会，科技感，深色背景'}"></textarea>
-    <div class="acts">${acts.map(a=>`<button class="act${a[4]?' primary':''}" data-a="${a[0]}"${a[3]?' disabled':''}><b>${a[1]}</b><span>${a[2]}</span></button>`).join('')}</div>
+    <div class="acts">${acts.map(a=>`<button class="act${a[4]?' primary':''}${a[5]?' span2':''}" data-a="${a[0]}"${a[3]?' disabled':''}><b>${a[1]}</b><span>${a[2]}</span></button>`).join('')}</div>
     <div class="hint2">回车 = 第一个按钮 · Shift+回车 换行 · Esc 关闭</div>`);
   const inp=s.querySelector('#pal-in');inp.focus();
   const ps=s.querySelector('#pal-set');if(ps)ps.onclick=()=>openSettings();
   inp.addEventListener('input',()=>autosize(inp));
   const run=a=>{
+    if(a==='import'){openImport();return}
     const v=inp.value.trim();
     if((a==='layout'&&!v&&!pg().notes)||(a==='outline'&&!v)||(a==='edit'&&!v)){inp.focus();toast('先写一句你想要什么');return}
     closeSheets();
@@ -1540,7 +1551,7 @@ const EDIT_CSS=`[data-ed-hover]{outline:2px dashed rgba(0,122,255,.55)!important
 function hookPreview(){
   let d;try{d=$('#pvframe').contentDocument}catch{return}
   if(!d||!d.body)return;
-  pvDoc=d;pvRoot=d.querySelector(`.slide[data-pid="${pg().id}"]`);pvSel=null;
+  pvDoc=d;pvRoot=d.querySelector(`.slide[data-pid="${pg().id}"]`);pvSel=null;hookDrop(d);
   if(!pvRoot||!parts[pg().id])return;
   const st=d.createElement('style');st.textContent=EDIT_CSS;d.head.appendChild(st);
   let hov=null;
@@ -1613,6 +1624,253 @@ function pvAct(a){
   else if(a==='open')saveDeck().then(()=>window.open(`/output/index.html#${cur+1}`,'_blank'));
 }
 $('#pv-gen1').onclick=()=>genPages([cur]);
+
+/* ================= 导入做好的 HTML ================= */
+// 普通网页：样式加上 [data-pid] 前缀，html/body 换成 .pg-html/.pg-body 两层包装，图片等换成 assets/ 里的文件；
+// 画板导出的整套页面：每个 section.slide 变成一页。导入后自动识别大致结构，生成画布上的线框。
+const isLocal=u=>!!u&&!/^([a-z][\w+.-]*:|\/\/|#)/i.test(u.trim());
+const baseName=u=>{const s=String(u).trim().split(/[?#]/)[0].split(/[\\/]/).pop()||'';try{return decodeURIComponent(s).toLowerCase()}catch{return s.toLowerCase()}};
+const assetUrl=k=>'assets/'+encodeURIComponent(k);
+const toHex=c=>{const m=/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/.exec(c||'');return !m||m[4]==='0'?null:'#'+m.slice(1,4).map(x=>(+x).toString(16).padStart(2,'0')).join('')};
+const vhFix=s=>s.replace(/(^|[^\w.#-])(\d*\.?\d+)[dsl]?v([hw])\b/g,'$1calc($2 * var(--pg-v$3))');
+const renameAnim=(s,frames,id)=>frames.length?s.replace(/(animation(?:-name)?\s*:)([^;}]*)/g,(m,a,v)=>a+v.replace(/[\w-]+/g,w=>frames.includes(w)?id+'-'+w:w)):s;
+function splitSel(s){const o=[];let d=0,b='';for(const c of s){if(c==='('||c==='[')d++;else if(c===')'||c===']')d--;if(c===','&&!d){o.push(b);b=''}else b+=c}o.push(b);return o}
+// 按宽度的 @media 改成 @container：预览框再小，也按页面本身的宽度排版
+const cq=m=>{const qs=[...m].map(q=>q.trim().replace(/^(only\s+)?(screen|all)\s+and\s+/i,''));
+  return qs.length&&qs.every(q=>!/device/i.test(q)&&/^\([^()]*\bwidth\b[^()]*\)(\s+and\s+\([^()]*\bwidth\b[^()]*\))*$/i.test(q))?qs.join(' or '):null};
+function scopeCSS(css,id){
+  const S=`[data-pid="${id}"]`,frames=[],sheet=new CSSStyleSheet();
+  try{sheet.replaceSync(css)}catch{return {css:'',frames}}
+  const sel=s=>splitSel(s).map(x=>S+' '+x.trim().replace(/:root(?![\w-])/gi,'.pg-html').replace(/(^|[\s>+~(,])html(?![\w-])/gi,'$1.pg-html').replace(/(^|[\s>+~(,])body(?![\w-])/gi,'$1.pg-body')).join(',');
+  const walk=rules=>[...rules].map(r=>{
+    if(r instanceof CSSStyleRule)return sel(r.selectorText)+' '+r.cssText.slice(r.cssText.indexOf('{'));
+    if(r instanceof CSSMediaRule&&cq(r.media))return `@container pg ${cq(r.media)}{\n${walk(r.cssRules)}\n}`;
+    if(r instanceof CSSKeyframesRule){frames.push(r.name);return `@keyframes ${CSS.escape(id+'-'+r.name)}{${[...r.cssRules].map(k=>k.cssText).join('')}}`}
+    if(r.cssRules)return r.cssText.slice(0,r.cssText.indexOf('{'))+'{\n'+walk(r.cssRules)+'\n}';
+    return r.cssText;
+  }).join('\n');
+  return {css:renameAnim(vhFix(walk(sheet.cssRules)),frames,id),frames};
+}
+async function fetchCss(h){
+  try{
+    const u=new URL(h,location.href),r=await fetch(u,{signal:AbortSignal.timeout(5000)});if(!r.ok)return null;
+    return (await r.text()).replace(/url\(\s*(['"]?)([^'")]+)\1\s*\)/g,(m,q,x)=>/^data:/i.test(x)?m:`url("${new URL(x,u).href}")`);
+  }catch{return null}
+}
+async function uploadAsset(f){
+  const name=f.name.toLowerCase().replace(/[\\/\x00]/g,'_').replace(/^\.+/,'');
+  const data=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(String(fr.result).split(',')[1]||'');fr.readAsDataURL(f)});
+  await fetch('/api/asset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,data})});
+  return name;
+}
+function adoptSize(w,h){const P=doc.project;P.width=w;P.height=h;P.device=Object.keys(DEV).find(k=>DEV[k].w===w&&DEV[k].h===h)||'custom'}
+
+// 在看不见的 iframe 里排一遍版：量高度、取背景色、识别结构
+function measure(id,html,W,H,fixedH){
+  return new Promise(done=>{
+    const fr=document.createElement('iframe');let over=false;
+    fr.setAttribute('sandbox','allow-same-origin');
+    fr.style.cssText=`position:fixed;left:-30000px;top:0;width:${W}px;height:${H}px;border:0;visibility:hidden;pointer-events:none`;
+    const fin=async()=>{
+      if(over)return;over=true;
+      const d=fr.contentDocument,sec=d&&d.querySelector('section');let r={height:fixedH||H,bg:null,modules:[]};
+      try{
+        await Promise.race([d.fonts.ready,new Promise(z=>setTimeout(z,1500))]);
+        d.getAnimations().forEach(a=>{try{a.finish()}catch{a.cancel()}});
+        const bg=e=>e&&toHex(d.defaultView.getComputedStyle(e).backgroundColor);
+        const height=fixedH||Math.min(20000,Math.max(H,Math.ceil(sec.scrollHeight)));
+        r={height,bg:bg(sec.querySelector(':scope > .pg-html'))||bg(sec.querySelector(':scope > .pg-html > .pg-body')),modules:wireFrom(sec,W,height)};
+      }catch(e){console.warn('导入：排版测量失败',e)}
+      fr.remove();done(r);
+    };
+    fr.onload=()=>setTimeout(fin,80);setTimeout(fin,8000);
+    fr.srcdoc=`<!doctype html><html><head><meta charset="utf-8"><base href="${location.origin}/output/"><style>${DECK_CSS}</style></head><body><section class="slide active" data-pid="${id}" style="display:block;position:relative;left:0;top:0;transform:none;animation:none;box-shadow:none;width:${W}px;${fixedH?`height:${fixedH}px`:`min-height:${H}px`}">${html}</section></body></html>`;
+    document.body.appendChild(fr);
+  });
+}
+const WF_PRI={nav:0,footer:0,section:1,heading:2,button:3,image:4,video:4,chart:4,form:4,card:5,input:6,text:7,icon:8};
+const WF_LEAF=new Set(['heading','text','button','image','icon','video','chart','input','nav','footer']);
+function wireFrom(root,W,H){
+  const win=root.ownerDocument.defaultView,R=root.getBoundingClientRect(),found=[];
+  const kind=(c,t,w,h,st)=>{
+    const cls=String(c.getAttribute('class')||'')+' '+(c.id||'');
+    if(/^h[1-3]$/.test(t))return 'heading';
+    if(t==='nav'||(t==='header'&&h<=160))return 'nav';
+    if(t==='footer')return 'footer';
+    if(t==='button'||(t==='input'&&/^(submit|button|reset)$/i.test(c.type))||(t==='a'&&/btn|button|cta/i.test(cls)))return 'button';
+    if(t==='input'||t==='textarea'||t==='select')return 'input';
+    if(t==='img'||t==='picture'||t==='svg')return w<=64&&h<=64?'icon':'image';
+    if(t==='video'||t==='iframe')return 'video';
+    if(t==='canvas')return 'chart';
+    if(t==='form')return 'form';
+    if(/^(p|blockquote|h[4-6]|pre|figcaption|dt|dd)$/.test(t))return 'text';
+    if(h<240&&[...c.childNodes].some(n=>n.nodeType===3&&n.textContent.trim()))return 'text';
+    if(!c.children.length&&/url\(/.test(st.backgroundImage)&&w>=80&&h>=60)return 'image';
+    if(/(^|[\s_-])card($|[\s_])/i.test(cls))return 'card';
+    if(w*h>=W*H*.9)return null; // 包住整页的外层容器
+    if(/^(section|main|article|aside|header)$/.test(t)&&w>=W*.5&&h>=80)return 'section';
+    if(w>=W*.9&&h>=120&&(toHex(st.backgroundColor)||/url\(/.test(st.backgroundImage)))return 'section';
+    return null;
+  };
+  const visit=e=>{
+    for(const c of e.children){
+      const t=c.tagName.toLowerCase();
+      if(/^(script|style|link|meta|template|noscript|br)$/.test(t))continue;
+      const st=win.getComputedStyle(c);
+      if(st.display==='none'||st.visibility==='hidden'||st.opacity==='0')continue;
+      if(st.display==='contents'||c.classList.contains('pg-html')||c.classList.contains('pg-body')){visit(c);continue}
+      const r=c.getBoundingClientRect(),x=Math.round(r.left-R.left),y=Math.round(r.top-R.top),w=Math.round(r.width),h=Math.round(r.height);
+      if(w<6||h<6||x>=W||y>=H||x+w<=0||y+h<=0){if(st.overflow==='visible'&&t!=='svg')visit(c);continue}
+      const type=kind(c,t,w,h,st);
+      if(type){found.push({type,x,y,w,h,el:c,i:found.length});if(WF_LEAF.has(type))continue}
+      if(t!=='svg')visit(c);
+    }
+  };
+  visit(root);
+  let keep=found;
+  if(keep.length>40)keep=[...found].sort((a,b)=>WF_PRI[a.type]-WF_PRI[b.type]||b.w*b.h-a.w*a.h).slice(0,40).sort((a,b)=>a.i-b.i);
+  return keep.map(f=>{
+    const txt=norm(f.el.innerText||f.el.textContent).slice(0,80),alt=f.el.getAttribute('alt')||f.el.getAttribute('aria-label')||'';
+    const x=clamp(f.x,0,W-20),y=clamp(f.y,0,H-20);
+    return {id:uid(),no:++doc.seq,type:f.type,name:T[f.type].n,x,y,w:Math.min(f.w-(x-f.x),W-x),h:Math.min(f.h-(y-f.y),H-y),
+      text:TEXTY.has(f.type)?(f.type==='input'?f.el.getAttribute('placeholder')||'':txt):'',
+      notes:{...blankNotes(),content:TEXTY.has(f.type)||f.type==='section'?'':(alt||txt).slice(0,60)}};
+  });
+}
+
+// 一个普通网页 → 一页
+async function fromPage(d,fname,ctx){
+  const id=pid(),S=`[data-pid="${id}"]`;
+  const fix=u=>{if(!isLocal(u))return u;const k=baseName(u);if(!k)return u;if(!ctx.assets.has(k))ctx.missing.add(k);return assetUrl(k)};
+  const fixCss=s=>s.replace(/url\(\s*(['"]?)([^'")]+)\1\s*\)/g,(m,q,u)=>isLocal(u)?`url("${fix(u)}")`:m);
+  let css='';const links=[],imports=[],scripts=[];
+  for(const e of d.querySelectorAll('style,link[rel~="stylesheet" i]')){
+    if(e.tagName==='STYLE')css+=e.textContent+'\n';
+    else{
+      const h=e.getAttribute('href')||'';
+      if(isLocal(h)){const k=baseName(h);if(ctx.css[k]!=null)css+=ctx.css[k]+'\n';else ctx.missing.add(k)}
+      else{const t=await fetchCss(h);t==null?links.push(h):css+=t+'\n'}
+    }
+    e.remove();
+  }
+  css=css.replace(/@import\s+(?:url\()?\s*['"]?([^'")\s;]+)['"]?\s*\)?[^;]*;/g,(m,u)=>{
+    if(!isLocal(u)){imports.push(m);return ''}
+    const k=baseName(u);if(ctx.css[k]!=null)return ctx.css[k];ctx.missing.add(k);return '';
+  });
+  const sc=scopeCSS(fixCss(css),id);
+  for(const s of d.querySelectorAll('script')){
+    const src=s.getAttribute('src');
+    if(src&&isLocal(src)){const k=baseName(src);if(ctx.js[k]==null){ctx.missing.add(k);s.remove();continue}s.removeAttribute('src');s.textContent=ctx.js[k]}
+    if(!d.body.contains(s)){scripts.push(s.outerHTML);s.remove()}
+  }
+  const B=d.body,inline=s=>renameAnim(vhFix(fixCss(s)),sc.frames,id);
+  B.querySelectorAll('meta,title,base').forEach(e=>e.remove());
+  B.querySelectorAll('[src]').forEach(e=>e.setAttribute('src',fix(e.getAttribute('src'))));
+  B.querySelectorAll('[poster]').forEach(e=>e.setAttribute('poster',fix(e.getAttribute('poster'))));
+  B.querySelectorAll('[srcset]').forEach(e=>e.setAttribute('srcset',e.getAttribute('srcset').split(',').map(c=>{const [u,...r]=c.trim().split(/\s+/);return [fix(u),...r].join(' ')}).join(', ')));
+  B.querySelectorAll('image').forEach(e=>['href','xlink:href'].forEach(a=>e.hasAttribute(a)&&e.setAttribute(a,fix(e.getAttribute(a)))));
+  B.querySelectorAll('[style]').forEach(e=>e.setAttribute('style',inline(e.getAttribute('style'))));
+  const attrs=(el,cls)=>` class="${esc((cls+' '+(el.getAttribute('class')||'')).trim())}"`+[...el.attributes].filter(a=>!/^(class|xmlns.*|on.*)$/i.test(a.name)).map(a=>` ${a.name}="${esc(a.name==='style'?inline(a.value):a.value)}"`).join('');
+  const make=(W,H,bg)=>`<style>
+${imports.join('\n')}
+:where(${S} > .pg-html){display:flow-root;container:pg/inline-size;min-height:100%;font:initial;color:CanvasText;background:${bg||'transparent'};--pg-vw:${W/100}px;--pg-vh:${H/100}px}
+:where(${S} .pg-html,${S} .pg-html *){box-sizing:content-box}
+:where(${S} .pg-body){margin:8px}
+${sc.css}
+</style>
+${links.map(h=>`<link rel="stylesheet" href="${esc(h)}">\n`).join('')}<div${attrs(d.documentElement,'pg-html')}>
+<div${attrs(B,'pg-body')}>
+${B.innerHTML.trim()}
+</div>
+</div>
+${scripts.join('\n')}`;
+  let W=doc.project.width,H=doc.project.height,seq=doc.seq,m=await measure(id,make(W,H),W,H);
+  if(ctx.adopt&&doc.project.device==='slide'&&m.height>H*1.15){adoptSize(1440,900);W=1440;H=900;doc.seq=seq;m=await measure(id,make(W,H),W,H);ctx.notes.push('已换成桌面网页尺寸')}
+  if(ctx.adopt){doc.project.background=m.bg||'#ffffff';if(d.title&&(!doc.project.title||doc.project.title==='未命名项目'))doc.project.title=d.title}
+  ctx.adopt=false;
+  const h1=d.querySelector('h1');
+  return {page:{id,title:(d.title||(h1&&norm(h1.textContent))||fname.replace(/\.html?$/i,'')).slice(0,40),notes:`导入自 ${fname}`,
+    height:doc.project.device==='slide'&&m.height<=H*1.15?H:m.height,modules:m.modules},html:make(W,H,m.bg)};
+}
+// 画板导出的整套页面 → 每个 section.slide 一页
+async function fromDeck(d,slides,fname,ctx){
+  const f=slides[0],w=parseFloat(f.style.width)||doc.project.width,h=parseFloat(f.style.height)||doc.project.height;
+  if(ctx.adopt){
+    adoptSize(w,h);const bg=toHex(f.style.backgroundColor);if(bg)doc.project.background=bg;
+    if(d.title&&(!doc.project.title||doc.project.title==='未命名项目'))doc.project.title=d.title;
+  }else if(w!==doc.project.width)ctx.notes.push(`原稿宽 ${w}px，和当前项目（${doc.project.width}px）不一样`);
+  ctx.adopt=false;
+  const out=[];
+  for(const s of slides){
+    const old=s.getAttribute('data-pid'),id=pid(),ph=parseFloat(s.style.height)||h,hd=s.querySelector('h1,h2,h3');
+    const page={id,title:(hd?norm(hd.textContent):'').slice(0,40)||`第 ${out.length+1} 页`,notes:`导入自 ${fname}`,height:ph,modules:[]};
+    if(s.querySelector(':scope > .wf-tag')){ // 还没生成的线框页：把线框还原成模块
+      page.modules=[...s.querySelectorAll(':scope > .wf-m')].map(e=>{
+        const type=(e.className.match(/\bwf-(\w+)/g)||[]).map(x=>x.slice(3)).find(k=>T[k])||'box',b=e.querySelector('b'),sm=e.querySelector('small');
+        return {id:uid(),no:++doc.seq,type,name:T[type].n,x:parseFloat(e.style.left)||0,y:parseFloat(e.style.top)||0,w:parseFloat(e.style.width)||100,h:parseFloat(e.style.height)||60,
+          text:TEXTY.has(type)&&b?b.textContent:'',notes:{...blankNotes(),content:sm?sm.textContent:''}};
+      });
+      out.push({page,html:null});continue;
+    }
+    const html=s.innerHTML.trim().split(old).join(id);
+    page.modules=(await measure(id,html,doc.project.width,ph,ph)).modules;
+    out.push({page,html});
+  }
+  return out;
+}
+
+let importing=false;
+async function importFiles(files){
+  if(importing)return;
+  const htmls=files.filter(f=>/\.html?$/i.test(f.name)),others=files.filter(f=>!/\.html?$/i.test(f.name));
+  if(!htmls.length&&!others.length)return;
+  importing=true;toast(htmls.length?'正在导入…':'正在上传…',20000);
+  try{
+    const ctx={css:{},js:{},assets:new Set(),missing:new Set(),notes:[],adopt:doc.pages.length===1&&!pg().modules.length&&!parts[pg().id]};
+    for(const f of others){
+      const k=f.name.toLowerCase();
+      if(/\.css$/.test(k))ctx.css[k]=await f.text();
+      else if(/\.m?js$/.test(k))ctx.js[k]=await f.text();
+      else ctx.assets.add(await uploadAsset(f));
+    }
+    if(!htmls.length){ // 只拖了图片：补上之前导入时缺的文件
+      if(mode==='preview'){await saveDeck();loadPreview()}
+      toast(`已上传 ${ctx.assets.size} 个文件到 output/assets/，导入的网页会自动用上`,3600);return;
+    }
+    checkpoint();
+    const blank=ctx.adopt,items=[];
+    for(const f of htmls){
+      const d=new DOMParser().parseFromString(await f.text(),'text/html');
+      const slides=[...d.querySelectorAll('section.slide[data-pid]')];
+      if(slides.length)items.push(...await fromDeck(d,slides,f.name,ctx));
+      else items.push(await fromPage(d,f.name,ctx));
+    }
+    const at=blank?0:cur+1;
+    doc.pages.splice(at,blank?1:0,...items.map(it=>it.page));
+    await Promise.all(items.filter(it=>it.html!=null).map(it=>{parts[it.page.id]=it.html;return savePart(it.page.id)}));
+    $('#ptitle').value=doc.project.title||'';
+    cur=at;clearEls();sel.clear();changed();fitView();
+    await saveDeck();
+    if(mode==='preview')loadPreview();else await setMode('preview');
+    const miss=[...ctx.missing];
+    toast(`已导入 ${items.length} 页`+(ctx.notes.length?'，'+ctx.notes.join('，'):'')+
+      (miss.length?`。缺 ${miss.length} 个文件：${miss.slice(0,3).join('、')}${miss.length>3?' 等':''}，把它们拖进来就能补上`:'。点文字直接改，或选中元素让 AI 改'),miss.length?7000:3600);
+  }catch(e){console.error(e);toast('导入失败：'+String(e.message||e).slice(0,60))}
+  finally{importing=false}
+}
+const importIn=Object.assign(document.createElement('input'),{type:'file',multiple:true,accept:'.html,.htm,.css,.js,image/*,video/*,audio/*,.woff,.woff2,.ttf,.otf'});
+importIn.onchange=()=>{const f=[...importIn.files];importIn.value='';importFiles(f)};
+function openImport(){closeSheets();importIn.click()}
+// 把文件拖进窗口导入（页面条里拖动排序不算）
+const isFileDrag=e=>dragFrom<0&&e.dataTransfer&&[...e.dataTransfer.types].includes('Files');
+function hookDrop(d){
+  d.addEventListener('dragenter',e=>{if(isFileDrag(e)){e.preventDefault();document.body.classList.add('dropping')}});
+  d.addEventListener('dragover',e=>{if(isFileDrag(e)){e.preventDefault();e.dataTransfer.dropEffect='copy'}});
+}
+hookDrop(document);
+$('#dropzone').addEventListener('dragleave',e=>{if(!e.relatedTarget||!$('#dropzone').contains(e.relatedTarget))document.body.classList.remove('dropping')});
+$('#dropzone').addEventListener('drop',e=>{e.preventDefault();document.body.classList.remove('dropping');importFiles([...e.dataTransfer.files])});
+document.addEventListener('drop',e=>{if(isFileDrag(e)){e.preventDefault();document.body.classList.remove('dropping')}});
 
 /* ================= 播放 ================= */
 let plPage=null;

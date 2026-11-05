@@ -2,13 +2,16 @@
 """网页画板的本地服务（只用 Python 标准库）。
 
 - 提供画板页面，并把画板自动保存到 board.json
-- 保存 AI 生成的每一页 HTML（output/parts/<页面id>.html）和拼好的整套页面（output/index.html）
+- 保存 AI 生成或导入的每一页 HTML（output/parts/<页面id>.html）和拼好的整套页面（output/index.html）
+- 保存导入网页时一起上传的图片等资源（output/assets/）
 - 代为转发大模型请求（OpenAI 兼容接口，如 DeepSeek），API Key 只保存在本机 config.json
 """
+import base64
 import json
 import os
 import re
 import urllib.error
+import urllib.parse
 import urllib.request
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 
@@ -18,12 +21,16 @@ BOARD = os.path.join(DIR, "board.json")
 CONFIG = os.path.join(DIR, "config.json")
 OUT = os.path.join(DIR, "output")
 PARTS = os.path.join(OUT, "parts")
+ASSETS = os.path.join(OUT, "assets")
 PAGE = os.path.join(DIR, "index.html")
 ID_RE = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
+ASSET_RE = re.compile(r"^[^/\\\x00]{1,120}$")
 TYPES = {".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",
          ".js": "text/javascript; charset=utf-8", ".json": "application/json; charset=utf-8",
          ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
-         ".svg": "image/svg+xml", ".gif": "image/gif", ".webp": "image/webp"}
+         ".svg": "image/svg+xml", ".gif": "image/gif", ".webp": "image/webp", ".avif": "image/avif",
+         ".ico": "image/x-icon", ".mp4": "video/mp4", ".webm": "video/webm", ".mp3": "audio/mpeg",
+         ".woff": "font/woff", ".woff2": "font/woff2", ".ttf": "font/ttf", ".otf": "font/otf"}
 DEFAULT_CONFIG = {"baseUrl": "https://api.deepseek.com", "model": "deepseek-chat", "apiKey": ""}
 
 
@@ -121,7 +128,7 @@ class Handler(BaseHTTPRequestHandler):
             except Exception as e:  # noqa: BLE001
                 return self._upstream_error(e)
         if path.startswith("/output/"):
-            full = os.path.normpath(os.path.join(DIR, path.lstrip("/")))
+            full = os.path.normpath(os.path.join(DIR, urllib.parse.unquote(path).lstrip("/")))
             if full.startswith(OUT + os.sep) and os.path.isfile(full):
                 with open(full, "rb") as f:
                     return self._send(200, f.read(), TYPES.get(os.path.splitext(full)[1].lower(), "application/octet-stream"))
@@ -160,6 +167,15 @@ class Handler(BaseHTTPRequestHandler):
             else:
                 write_file(target, body["html"])
             return self._json({"ok": True})
+
+        if path == "/api/asset":  # 导入网页时一起上传的图片、字体等，保存到 output/assets/
+            name = str(body.get("name", ""))
+            if not ASSET_RE.match(name) or name.startswith("."):
+                return self._json({"error": "bad name"}, 400)
+            os.makedirs(ASSETS, exist_ok=True)
+            with open(os.path.join(ASSETS, name), "wb") as f:
+                f.write(base64.b64decode(body.get("data", "")))
+            return self._json({"url": "assets/" + name})
 
         if path == "/api/deck":
             write_file(os.path.join(OUT, "index.html"), body.get("html", ""))

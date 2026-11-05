@@ -21,6 +21,8 @@
 - 翻到这一页时 section 会被加上 `active` class，入场动画写成 `[data-pid="…"].active .xxx { animation: … }`
 - 交互脚本用 `const root=document.currentScript.closest('[data-pid]')`，只操作 root 里的元素；可点击元素用 `button` 或加 `data-nopage`，避免触发翻页
 
+用户导入的网页也是这样的片段：原来的 `<html>`、`<body>` 变成了 `.pg-html`、`.pg-body` 两层 div，`vh/vw` 换成了 `var(--pg-vh/--pg-vw)`，按宽度的 `@media` 换成了 `@container pg`。修改导入页时保持这些写法；页面用到的图片在 `output/assets/`，用相对路径 `assets/文件名` 引用。
+
 `output/index.html` 是画板拼好的整套页面，不要手改。用户在画板里切到“预览”或点“播放”时，会读取最新的 parts 重新拼装。
 
 ## 修改画板本身
