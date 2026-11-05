@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>网页画板</title>
+<meta name="description" content="用摆家具的方式设计网页和 HTML 演示稿：拖模块、写需求，交给 AI 做成真正的网页。">
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#0B0B12;color:#f5f5f7;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased;display:flex;align-items:center;justify-content:center;padding:48px 16px;background-image:radial-gradient(600px 400px at 70% 20%,rgba(124,92,255,.22),transparent 70%),radial-gradient(500px 380px at 15% 80%,rgba(59,130,246,.14),transparent 70%)}
+main{width:100%;max-width:860px}
+h1{margin:0;font-size:clamp(48px,9vw,96px);font-weight:800;letter-spacing:-2px;background:linear-gradient(100deg,#fff 8%,#c7b8ff 42%,#7C5CFF 72%,#3B82F6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin:14px 0 40px;font-size:clamp(17px,2.4vw,22px);line-height:1.6;color:rgba(235,235,245,.68)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+a.card{display:block;padding:26px;border-radius:22px;text-decoration:none;color:inherit;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s}
+a.card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.24)}
+a.card.main{border:1.5px solid transparent;background:linear-gradient(#15141f,#15141f) padding-box,linear-gradient(135deg,#7C5CFF,#3B82F6) border-box}
+.card b{display:block;font-size:21px;margin-bottom:8px}
+.card span{font-size:15px;line-height:1.6;color:rgba(235,235,245,.6)}
+.foot{margin-top:36px;font-size:14px;color:rgba(235,235,245,.45)}
+.foot a{color:rgba(235,235,245,.8)}
+</style>
+</head>
+<body>
+<main>
+  <h1>网页画板</h1>
+  <p class="sub">画个草图，写几句备注，AI 帮你做成能翻页的网页。<br>本地运行、零依赖，可以设计网站，也可以代替 PPT 做演示。</p>
+  <div class="cards">
+    <a class="card main" href="tutorial/教程视频.html"><b>▶ 教程视频</b><span>1 分半看完整个流程，自动播放，空格暂停</span></a>
+    <a class="card" href="tutorial/成品.html"><b>8 页演示稿</b><span>用网页画板做出来的成品，← → 翻页，F 全屏</span></a>
+    <a class="card" href="https://github.com/aa01093323903-ui/html-canvas-board/blob/main/docs/tutorial/%E8%BF%87%E7%A8%8B%E8%AE%B0%E5%BD%95.md"><b>过程记录</b><span>每一步怎么摆模块、怎么写备注</span></a>
+  </div>
+  <p class="foot">源码和使用说明：<a href="https://github.com/aa01093323903-ui/html-canvas-board">github.com/aa01093323903-ui/html-canvas-board</a> · MIT 开源</p>
+</main>
+</body>
+</html>

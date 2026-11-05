@@ -17,8 +17,8 @@
 
 [`docs/tutorial/`](docs/tutorial) 里是一次完整的实测：用网页画板从零做一套 8 页的产品介绍演示稿，每一步都有截图和数据快照。
 
-- [`成品.html`](docs/tutorial/成品.html)：做出来的 8 页演示稿，下载后双击打开，← → 翻页，F 全屏
-- [`教程视频.html`](docs/tutorial/教程视频.html)：根据实测过程做的 1 分半教程动画，双击打开自动播放
+- **[在线观看教程视频](https://aa01093323903-ui.github.io/html-canvas-board/tutorial/%E6%95%99%E7%A8%8B%E8%A7%86%E9%A2%91.html)**：根据实测过程做的 1 分半教程动画，自动播放，空格暂停
+- **[在线播放 8 页演示稿](https://aa01093323903-ui.github.io/html-canvas-board/tutorial/%E6%88%90%E5%93%81.html)**：用网页画板做出来的成品，← → 翻页，F 全屏
 - [`过程记录.md`](docs/tutorial/过程记录.md)：每一步做了什么、模块怎么摆、备注怎么写
 
 ## 功能
